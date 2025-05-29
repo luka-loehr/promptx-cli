@@ -19,6 +19,41 @@ A Node.js-based command-line interface (CLI) that takes unstructured or messy de
 npm install -g prompt-cli-cleaner
 ```
 
+### Setting up your OpenAI API Key
+
+After installation, you need to set up your OpenAI API key. There are two ways to do this:
+
+#### Option 1: Create a .env file in your working directory
+
+Create a file named `.env` in the directory where you'll be running the `prompt` command with the following content:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Replace `your_openai_api_key_here` with your actual OpenAI API key.
+
+#### Option 2: Set an environment variable
+
+You can also set the API key as an environment variable:
+
+**Windows (Command Prompt):**
+```
+set OPENAI_API_KEY=your_openai_api_key_here
+```
+
+**Windows (PowerShell):**
+```
+$env:OPENAI_API_KEY="your_openai_api_key_here"
+```
+
+**macOS/Linux:**
+```
+export OPENAI_API_KEY=your_openai_api_key_here
+```
+
+To make this permanent, add it to your shell profile file (~/.bashrc, ~/.zshrc, etc.).
+
 ### From source
 
 1. Clone this repository
@@ -86,7 +121,7 @@ prompt "Implementar autenticación de dos factores"
 | Issue | Solution |
 |-------|----------|
 | OpenAI API errors | Check your API key and quota limits |
-| Missing `.env` | Create a `.env` file with your OpenAI API key |
+| Missing API key | Set up your OpenAI API key as described in the installation section |
 | Model input errors | Ensure you're using a valid OpenAI model name |
 | Clipboard issues | Try using the `--display` flag to view the output in terminal |
 

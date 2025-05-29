@@ -55,7 +55,14 @@ async function cleanPrompt(text, model, display) {
   try {
     if (!process.env.OPENAI_API_KEY) {
       console.error('Error: OPENAI_API_KEY not found in environment variables');
-      console.error('Please create a .env file with your OpenAI API key');
+      console.error('\nTo set up your OpenAI API key, you have two options:');
+      console.error('\n1. Create a .env file in your working directory with:');
+      console.error('   OPENAI_API_KEY=your_openai_api_key_here');
+      console.error('\n2. Set it as an environment variable:');
+      console.error('   • Windows (Command Prompt): set OPENAI_API_KEY=your_openai_api_key_here');
+      console.error('   • Windows (PowerShell): $env:OPENAI_API_KEY="your_openai_api_key_here"');
+      console.error('   • macOS/Linux: export OPENAI_API_KEY=your_openai_api_key_here');
+      console.error('\nFor more information, see: https://github.com/luka-loehr/prompt-cli#setting-up-your-openai-api-key');
       process.exit(1);
     }
 
