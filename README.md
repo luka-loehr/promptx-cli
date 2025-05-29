@@ -16,7 +16,7 @@ A Node.js-based command-line interface (CLI) that takes unstructured or messy de
 ### From npm (recommended)
 
 ```bash
-npm install -g prompt-cli
+npm install -g prompt-cli-cleaner
 ```
 
 ### From source

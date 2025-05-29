@@ -1,5 +1,5 @@
 {
-  "name": "prompt-cli",
+  "name": "prompt-cli-cleaner",
   "version": "1.0.0",
   "description": "CLI tool that cleans unstructured prompts for LLMs",
   "main": "index.js",
