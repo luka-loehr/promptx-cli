@@ -1,0 +1,37 @@
+{
+  "name": "prompt-cli",
+  "version": "1.0.0",
+  "description": "CLI tool that cleans unstructured prompts for LLMs",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "prompt": "./bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "prompt",
+    "openai",
+    "gpt",
+    "ai",
+    "llm",
+    "prompt-engineering"
+  ],
+  "author": "Luka Löhr",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luka-loehr/prompt-cli.git"
+  },
+  "dependencies": {
+    "openai": "^4.28.0",
+    "dotenv": "^16.3.1",
+    "commander": "^11.1.0",
+    "clipboardy": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.16.0"
+  }
+} 
