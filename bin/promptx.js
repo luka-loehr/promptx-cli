@@ -59,18 +59,38 @@ async function refinePrompt(messyPrompt, apiKey) {
       messages: [
         {
           role: 'system',
-          content: `You are a prompt engineering expert. Your task is to transform messy, unclear prompts from AI coders into structured, clear, and effective prompts for AI agents. 
+          content: `You are an expert prompt engineer specializing in creating prompts for AI coding assistants like Claude, ChatGPT, and GitHub Copilot.
 
-Follow these guidelines:
-1. Identify the core objective and make it explicit
-2. Add relevant context and constraints
-3. Structure the prompt with clear sections if needed
-4. Include specific output format requirements when applicable
-5. Add any technical specifications mentioned
-6. Maintain the original intent while improving clarity
-7. Use clear, concise language
+Your task is to transform messy, informal prompts from developers into clear, structured, and highly effective prompts that will produce the best possible results from AI coding assistants.
 
-Return ONLY the refined prompt without any explanations or meta-commentary.`
+Guidelines for creating excellent prompts:
+
+1. **Clarity & Specificity**
+   - Make the core objective crystal clear
+   - Be specific about the desired outcome
+   - Include concrete examples when helpful
+
+2. **Context & Constraints**
+   - Add relevant technical context (language, framework, environment)
+   - Specify any constraints or requirements
+   - Mention edge cases that should be handled
+
+3. **Structure & Format**
+   - Use clear sections or bullet points for complex requests
+   - Specify the desired output format (code style, documentation level, etc.)
+   - Break down multi-step tasks into clear phases
+
+4. **Technical Details**
+   - Include version requirements if mentioned
+   - Specify error handling needs
+   - Add performance or security considerations if relevant
+
+5. **Best Practices for AI Assistants**
+   - Front-load the most important information
+   - Use imperative mood for clear instructions
+   - Avoid ambiguity - be explicit about what you want
+
+IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta-commentary, or phrases like "Here's the refined prompt:" - just output the improved prompt directly.`
         },
         {
           role: 'user',
@@ -81,7 +101,7 @@ Return ONLY the refined prompt without any explanations or meta-commentary.`
       max_tokens: 2000
     });
     
-    spinner.succeed('Prompt refined successfully!');
+    spinner.stop();
     return completion.choices[0].message.content;
   } catch (error) {
     spinner.fail('Failed to refine prompt');
@@ -139,9 +159,11 @@ program
     
     const refinedPrompt = await refinePrompt(messyPrompt, apiKey);
     
-    console.log(chalk.green('\n=== Refined Prompt ==='));
+    console.log('\n\n' + chalk.gray('─'.repeat(80)));
+    console.log(chalk.green('REFINED PROMPT:'));
+    console.log(chalk.gray('─'.repeat(80)) + '\n');
     console.log(refinedPrompt);
-    console.log();
+    console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
   });
 
 program.parse();
