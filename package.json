@@ -18,7 +18,15 @@
     "openai",
     "prompt-engineering"
   ],
-  "author": "",
+  "author": "Luka Loehr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luka-loehr/promptx-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/luka-loehr/promptx-cli/issues"
+  },
+  "homepage": "https://github.com/luka-loehr/promptx-cli#readme",
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.3.0",
