@@ -17,10 +17,10 @@ When you run `promptx` for the first time, you'll be prompted to enter your Open
 ### Basic Usage
 
 ```bash
-# Interactive mode (opens editor)
+# Interactive mode - type your prompt after running the command
 promptx
 
-# Direct prompt
+# Direct prompt from command line
 promptx "make a function that sorts array but also handle edge cases like null undefined etc"
 ```
 
@@ -56,11 +56,10 @@ Create a JavaScript function that sorts an array with the following requirements
 ### Features
 
 - Transform messy, unclear prompts into well-structured prompts
-- Interactive prompt input with built-in editor
-- Copy refined prompts to clipboard
-- Save refined prompts to file
+- Simple interactive prompt input - just type and press Enter
 - Secure API key storage
 - Beautiful CLI interface with colors and spinners
+- Direct command-line usage for quick refinements
 
 ## Requirements
 

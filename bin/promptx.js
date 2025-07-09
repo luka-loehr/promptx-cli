@@ -123,9 +123,9 @@ program
     } else {
       const answers = await inquirer.prompt([
         {
-          type: 'editor',
+          type: 'input',
           name: 'prompt',
-          message: 'Enter your messy prompt (press Enter to open editor):',
+          message: 'Enter your messy prompt:',
           validate: (input) => {
             if (!input || input.trim() === '') {
               return 'Prompt cannot be empty';
@@ -137,48 +137,11 @@ program
       messyPrompt = answers.prompt;
     }
     
-    console.log(chalk.cyan('\n=== Original Prompt ==='));
-    console.log(messyPrompt);
-    
     const refinedPrompt = await refinePrompt(messyPrompt, apiKey);
     
     console.log(chalk.green('\n=== Refined Prompt ==='));
     console.log(refinedPrompt);
-    
-    const { action } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'action',
-        message: 'What would you like to do?',
-        choices: [
-          { name: 'Copy to clipboard', value: 'copy' },
-          { name: 'Save to file', value: 'save' },
-          { name: 'Exit', value: 'exit' }
-        ]
-      }
-    ]);
-    
-    if (action === 'copy') {
-      try {
-        const { default: clipboardy } = await import('clipboardy');
-        await clipboardy.write(refinedPrompt);
-        console.log(chalk.green('✓ Copied to clipboard!'));
-      } catch (error) {
-        console.log(chalk.yellow('Note: Install clipboardy globally for clipboard support: npm install -g clipboardy'));
-      }
-    } else if (action === 'save') {
-      const { filename } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'filename',
-          message: 'Enter filename:',
-          default: 'refined-prompt.txt'
-        }
-      ]);
-      
-      fs.writeFileSync(filename, refinedPrompt);
-      console.log(chalk.green(`✓ Saved to ${filename}`));
-    }
+    console.log();
   });
 
 program.parse();
