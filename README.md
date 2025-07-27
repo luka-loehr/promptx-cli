@@ -5,7 +5,23 @@ A CLI tool that transforms messy prompts into structured, clear prompts for AI a
 ## Installation
 
 ```bash
-npm install -g promptx
+npm install -g @lukaloehr/promptx
+```
+
+If you get a permissions error, you can either:
+
+1. Use sudo (not recommended):
+```bash
+sudo npm install -g @lukaloehr/promptx
+```
+
+2. Configure npm to use a different directory (recommended):
+```bash
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+npm install -g @lukaloehr/promptx
 ```
 
 ## Usage
