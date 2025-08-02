@@ -1,0 +1,48 @@
+# Source and development files
+.git/
+.gitignore
+.npmignore
+
+# Environment files
+.env
+.env.*
+
+# Development dependencies
+node_modules/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Build and temporary files
+*.tmp
+.temp/
+
+# Documentation sources
+docs/
+
+# CI/CD files
+.github/
+.travis.yml
+.gitlab-ci.yml
+
+# Development config
+.eslintrc*
+.prettierrc*
+.editorconfig
+
+# Logs
+*.log
+npm-debug.log*

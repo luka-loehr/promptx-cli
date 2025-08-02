@@ -1,9 +1,16 @@
 {
   "name": "@lukaloehr/promptx",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "A CLI tool that transforms messy prompts into structured, clear prompts for AI agents",
   "type": "module",
-  "main": "index.js",
+  "main": "bin/promptx.js",
+  "files": [
+    "bin/",
+    "scripts/",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "bin": {
     "promptx": "bin/promptx.js"
   },
@@ -17,7 +24,13 @@
     "ai",
     "gpt",
     "openai",
-    "prompt-engineering"
+    "anthropic",
+    "claude",
+    "grok",
+    "xai",
+    "prompt-engineering",
+    "prompt-refiner",
+    "ai-tools"
   ],
   "author": "Luka Loehr",
   "repository": {

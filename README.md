@@ -42,6 +42,9 @@ promptx
 # Direct mode
 promptx "your messy prompt here"
 
+# Get help
+promptx /help
+
 # Switch models
 promptx /model
 

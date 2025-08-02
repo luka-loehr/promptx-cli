@@ -1,5 +1,22 @@
 # Changelog
 
+All notable changes to promptx will be documented in this file.
+
+## [1.3.0] - 2025-08-02 - Stable Release 🎉
+
+### Added
+- 📚 `/help` command for quick reference and command overview
+- 🎯 Complete feature documentation in help menu
+- 📝 Comprehensive update history in `/whats-new`
+- 🔧 Enhanced package configuration with explicit file lists
+- 📦 `.npmignore` for cleaner npm packages
+- 🔑 Updated `.env.example` with all provider formats
+
+### Changed
+- 🌟 `/whats-new` now shows complete feature history for stable release
+- 📋 Improved package metadata and keywords
+- 🎨 Better organized command documentation
+
 ## [1.2.1] - 2025-08-02
 
 ### Added
@@ -36,7 +53,7 @@
 - Improved first-run experience with guided setup
 - Configuration now supports multiple API providers
 
-## [1.0.2] - 2024-01-XX
+## [1.0.2] - 2025-08-02
 
 ### Added
 - 📦 NPM badges in README
@@ -46,17 +63,27 @@
 - Improved installation instructions with emphasis on global installation
 - Simplified README structure
 
-## [1.0.1] - 2024-01-XX
+## [1.0.1] - 2025-08-02
 
 ### Fixed
 - Package.json formatting issues
 - Installation command documentation
 
-## [1.0.0] - 2024-01-XX
+## [1.0.0] - 2025-08-02
 
 ### Added
-- Initial release
-- Transform messy prompts into structured, clear prompts
-- Interactive and direct command-line modes
-- Secure API key storage
-- Beautiful CLI interface with colors and spinners
+- 🎉 Initial release
+- ✨ Transform messy prompts into structured, clear prompts
+- 🎨 Beautiful CLI interface with colors and spinners
+- 📦 Global npm package with easy installation
+- 🔐 Secure API key storage
+- 💻 Interactive and direct command-line modes
+- 🤖 GPT-4o support for prompt refinement
+
+### Features
+- Simple one-command global installation
+- First-time setup wizard for API key
+- Beautiful colored output
+- Loading spinners for better UX
+- Error handling with helpful messages
+- Command to reset API key

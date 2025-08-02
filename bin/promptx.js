@@ -455,59 +455,101 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
   }
 }
 
+function showHelp() {
+  console.log(chalk.blue('\n📚 promptx Help'));
+  console.log(chalk.gray('─'.repeat(50)));
+  
+  console.log(chalk.green('\n🚀 Basic Usage:'));
+  console.log(chalk.white('  promptx                    ') + chalk.gray('- Interactive mode'));
+  console.log(chalk.white('  promptx "your prompt"      ') + chalk.gray('- Direct mode'));
+  
+  console.log(chalk.green('\n⚡ Commands:'));
+  console.log(chalk.white('  /help                      ') + chalk.gray('- Show this help menu'));
+  console.log(chalk.white('  /model                     ') + chalk.gray('- Switch AI models'));
+  console.log(chalk.white('  /whats-new                 ') + chalk.gray('- See latest updates'));
+  console.log(chalk.white('  promptx reset              ') + chalk.gray('- Reset configuration'));
+  
+  console.log(chalk.green('\n🤖 Supported Providers:'));
+  console.log(chalk.white('  • OpenAI    ') + chalk.gray('- GPT-4o, O4 Mini, O3'));
+  console.log(chalk.white('  • Anthropic ') + chalk.gray('- Claude Sonnet 4, Opus 4'));
+  console.log(chalk.white('  • xAI       ') + chalk.gray('- Grok 3, Grok 4'));
+  
+  console.log(chalk.green('\n💡 Tips:'));
+  console.log(chalk.gray('  • First run will guide you through setup'));
+  console.log(chalk.gray('  • API keys are stored securely'));
+  console.log(chalk.gray('  • Check for updates with update notifications'));
+  
+  console.log(chalk.gray('\n─'.repeat(50)));
+  console.log(chalk.gray('Docs: https://github.com/luka-loehr/promptx-cli\n'));
+}
+
 function showWhatsNew() {
   console.log(chalk.blue('\n🎉 What\'s New in promptx v' + packageJson.version));
   console.log(chalk.gray('─'.repeat(50)));
   
   const updates = [
     {
+      version: '1.3.0',
+      changes: [
+        '📚 Added /help command for quick reference',
+        '🎯 Complete feature set for stable release',
+        '📝 Comprehensive documentation updates',
+        '🔧 Package configuration improvements'
+      ]
+    },
+    {
       version: '1.2.1',
       changes: [
-        '🔔 Automatic update notifications when new versions are available',
-        '📦 Shows update command: npm install -g @lukaloehr/promptx',
-        '⏰ Checks for updates once per day'
+        '🔔 Automatic update notifications',
+        '📦 Shows update command when new version available',
+        '⏰ Daily update checks (non-intrusive)'
       ]
     },
     {
       version: '1.2.0',
       changes: [
-        '🚀 Added xAI Grok support: Grok 3, Grok 3 Mini, Grok 4, Grok 4 Heavy',
-        '🧠 Updated Claude models: Sonnet 4 and Opus 4',
-        '🤖 Updated OpenAI models: O4 Mini and O3',
-        '📁 Organized model selection by provider',
-        '🎯 Better model categorization in setup wizard'
+        '🚀 xAI Grok support (Grok 3, 3 Mini, 4, 4 Heavy)',
+        '🧠 Claude 2025 models (Sonnet 4, Opus 4)',
+        '🤖 OpenAI 2025 models (O4 Mini, O3)',
+        '📁 Provider-based model organization',
+        '🎨 Improved setup wizard UX'
       ]
     },
     {
       version: '1.1.0',
       changes: [
-        '🤖 Multi-model support: Choose between GPT-4o, GPT-4o Mini, O3, Claude 3.5 Sonnet, and Claude 3 Opus',
-        '🔄 /model command: Switch models on the fly',
-        '✨ Modern setup wizard: Interactive model and API key configuration',
-        '📰 /whats-new command: See latest updates and features',
-        '🔑 Support for both OpenAI and Anthropic API keys'
+        '🤖 Multi-model support (OpenAI + Anthropic)',
+        '🔄 /model command to switch models',
+        '✨ Interactive setup wizard',
+        '📰 /whats-new command',
+        '🔑 Multi-provider API key support'
       ]
     },
     {
-      version: '1.0.2',
+      version: '1.0.x',
       changes: [
-        '📦 Improved installation instructions',
-        '⚠️  Post-install warnings for local installation'
+        '🎉 Initial release',
+        '✨ Transform messy prompts to structured ones',
+        '🎨 Beautiful CLI interface',
+        '📦 Global npm package',
+        '⚠️  Post-install warnings'
       ]
     }
   ];
   
+  // Show all updates for stable release
+  console.log(chalk.yellow('\n🌟 Stable Release - All Features:\n'));
+  
   updates.forEach(update => {
-    if (update.version === packageJson.version || packageJson.version.startsWith(update.version.split('.')[0])) {
-      console.log(chalk.green(`\nv${update.version}:`));
-      update.changes.forEach(change => {
-        console.log(chalk.white(`  ${change}`));
-      });
-    }
+    console.log(chalk.green(`v${update.version}:`));
+    update.changes.forEach(change => {
+      console.log(chalk.white(`  ${change}`));
+    });
+    console.log();
   });
   
-  console.log(chalk.gray('\n─'.repeat(50)));
-  console.log(chalk.gray('For more info: https://github.com/luka-loehr/promptx-cli\n'));
+  console.log(chalk.gray('─'.repeat(50)));
+  console.log(chalk.gray('Docs: https://github.com/luka-loehr/promptx-cli\n'));
 }
 
 program
@@ -529,6 +571,11 @@ program
     // Handle special commands
     if (promptParts && promptParts.length === 1) {
       const command = promptParts[0].toLowerCase();
+      
+      if (command === '/help') {
+        showHelp();
+        return;
+      }
       
       if (command === '/model') {
         await changeModel();
@@ -566,6 +613,11 @@ program
       messyPrompt = answers.prompt;
       
       // Check for commands in interactive mode
+      if (messyPrompt.toLowerCase() === '/help') {
+        showHelp();
+        return;
+      }
+      
       if (messyPrompt.toLowerCase() === '/model') {
         await changeModel();
         return;
