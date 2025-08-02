@@ -41,9 +41,9 @@ const MODELS = {
     'o3': { name: 'O3', provider: 'openai' }
   },
   anthropic: {
-    'claude-3-5-sonnet-20241022': { name: 'Claude 3.5 Sonnet (Legacy)', provider: 'anthropic' },
-    'claude-3-5-sonnet-v4': { name: 'Claude Sonnet 4', provider: 'anthropic' },
-    'claude-3-opus-v4': { name: 'Claude Opus 4', provider: 'anthropic' }
+    'claude-3-5-sonnet-20241022': { name: 'Claude 3.5 Sonnet', provider: 'anthropic' },
+    'claude-opus-4': { name: 'Claude Opus 4', provider: 'anthropic' },
+    'claude-sonnet-4': { name: 'Claude Sonnet 4', provider: 'anthropic' }
   },
   xai: {
     'grok-3': { name: 'Grok 3', provider: 'xai' },
@@ -83,9 +83,9 @@ async function setupWizard() {
     ];
   } else if (provider === 'anthropic') {
     modelChoices = [
-      { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-3-5-sonnet-v4' },
-      { name: 'Claude Opus 4 (Most powerful)', value: 'claude-3-opus-v4' },
-      { name: 'Claude 3.5 Sonnet (Legacy)', value: 'claude-3-5-sonnet-20241022' }
+      { name: 'Claude Opus 4 (Most powerful, best coding)', value: 'claude-opus-4' },
+      { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-sonnet-4' },
+      { name: 'Claude 3.5 Sonnet (Previous generation)', value: 'claude-3-5-sonnet-20241022' }
     ];
   } else {
     modelChoices = [
@@ -255,9 +255,9 @@ async function changeModel() {
     ];
   } else if (provider === 'anthropic') {
     modelChoices = [
-      { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-3-5-sonnet-v4' },
-      { name: 'Claude Opus 4 (Most powerful)', value: 'claude-3-opus-v4' },
-      { name: 'Claude 3.5 Sonnet (Legacy)', value: 'claude-3-5-sonnet-20241022' }
+      { name: 'Claude Opus 4 (Most powerful, best coding)', value: 'claude-opus-4' },
+      { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-sonnet-4' },
+      { name: 'Claude 3.5 Sonnet (Previous generation)', value: 'claude-3-5-sonnet-20241022' }
     ];
   } else {
     modelChoices = [
@@ -393,31 +393,35 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
     
     if (modelInfo.provider === 'openai') {
       const openai = new OpenAI({ apiKey });
-      const completion = await openai.chat.completions.create({
+      
+      // Use max_completion_tokens for newer models (o4-mini, o3)
+      const completionParams = {
         model: selectedModel,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: messyPrompt }
         ],
-        temperature: 0.3,
-        max_tokens: 2000
-      });
+        temperature: 0.3
+      };
+      
+      // Newer models use max_completion_tokens
+      if (selectedModel === 'o4-mini' || selectedModel === 'o3') {
+        completionParams.max_completion_tokens = 2000;
+      } else {
+        completionParams.max_tokens = 2000;
+      }
+      
+      const completion = await openai.chat.completions.create(completionParams);
       refinedPrompt = completion.choices[0].message.content;
     } else if (modelInfo.provider === 'anthropic') {
       const anthropic = new Anthropic({ apiKey });
-      // Map model names to actual API model IDs
-      let apiModelId = selectedModel;
-      if (selectedModel === 'claude-3-5-sonnet-v4') {
-        apiModelId = 'claude-3-5-sonnet-20241022'; // Use latest available
-      } else if (selectedModel === 'claude-3-opus-v4') {
-        apiModelId = 'claude-3-opus-20240229'; // Use latest available
-      }
+      
       const completion = await anthropic.messages.create({
-        model: apiModelId,
+        model: selectedModel,
         messages: [{ role: 'user', content: messyPrompt }],
         system: systemPrompt,
         temperature: 0.3,
-        max_tokens: 2000
+        max_tokens: selectedModel === 'claude-opus-4' ? 32000 : 64000 // Opus 4: 32k, Sonnet 4: 64k
       });
       refinedPrompt = completion.content[0].text;
     } else if (modelInfo.provider === 'xai') {
@@ -426,15 +430,26 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         apiKey,
         baseURL: 'https://api.x.ai/v1'
       });
-      const completion = await xai.chat.completions.create({
+      
+      const completionParams = {
         model: selectedModel,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: messyPrompt }
-        ],
-        temperature: 0.3,
-        max_tokens: 2000
-      });
+        ]
+      };
+      
+      // Grok 4 is a reasoning model - no temperature/frequency/presence penalties
+      // Grok 3 supports standard parameters
+      if (selectedModel === 'grok-3' || selectedModel === 'grok-3-mini') {
+        completionParams.temperature = 0.3;
+        completionParams.max_tokens = 2000;
+      } else {
+        // Grok 4 and Grok 4 Heavy - reasoning models
+        completionParams.max_tokens = 100000; // Max 100k tokens for Grok models
+      }
+      
+      const completion = await xai.chat.completions.create(completionParams);
       refinedPrompt = completion.choices[0].message.content;
     }
     

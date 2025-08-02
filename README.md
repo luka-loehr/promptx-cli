@@ -22,10 +22,10 @@ npm install -g @lukaloehr/promptx
 - **O4 Mini** - Fast and efficient
 - **O3** - Advanced reasoning
 
-### Anthropic
-- **Claude Sonnet 4** - Balanced performance
-- **Claude Opus 4** - Most powerful
-- **Claude 3.5 Sonnet** - Legacy model
+### Anthropic  
+- **Claude Opus 4** - Most powerful, world's best coding model
+- **Claude Sonnet 4** - Balanced performance, superior reasoning
+- **Claude 3.5 Sonnet** - Previous generation
 
 ### xAI (Grok)
 - **Grok 3** - Advanced reasoning

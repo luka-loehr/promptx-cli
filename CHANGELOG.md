@@ -2,6 +2,19 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [1.3.1] - 2025-08-02
+
+### Fixed
+- 🐛 Fixed O4 Mini and O3 API errors by using `max_completion_tokens` parameter
+- 🔧 Fixed Claude 4 model identifiers (`claude-opus-4`, `claude-sonnet-4`)
+- 🎯 Updated Grok 4 API parameters (reasoning models don't support temperature)
+- 📝 Corrected model descriptions based on latest API documentation
+
+### Changed
+- Claude Opus 4 now correctly uses 32k max tokens, Sonnet 4 uses 64k
+- Grok 4 models now properly configured as reasoning models
+- O4 Mini and O3 use max_completion_tokens instead of max_tokens
+
 ## [1.3.0] - 2025-08-02 - Stable Release 🎉
 
 ### Added
