@@ -7,6 +7,7 @@ import ora from 'ora';
 import Conf from 'conf';
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
+import updateNotifier from 'update-notifier';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,6 +15,22 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+
+// Check for updates
+const notifier = updateNotifier({ 
+  pkg: packageJson,
+  updateCheckInterval: 1000 * 60 * 60 * 24 // Check once per day
+});
+
+if (notifier.update) {
+  console.log(chalk.yellow('\n╭─────────────────────────────────────────────────────────────╮'));
+  console.log(chalk.yellow('│                                                             │'));
+  console.log(chalk.yellow('│  ') + chalk.bold.green('Update available! ') + chalk.gray(`${notifier.update.current} → ${notifier.update.latest}`) + chalk.yellow('                      │'));
+  console.log(chalk.yellow('│                                                             │'));
+  console.log(chalk.yellow('│  ') + chalk.cyan('Run ') + chalk.bold.white('npm install -g @lukaloehr/promptx') + chalk.cyan(' to update') + chalk.yellow('      │'));
+  console.log(chalk.yellow('│                                                             │'));
+  console.log(chalk.yellow('╰─────────────────────────────────────────────────────────────╯\n'));
+}
 
 const config = new Conf({ projectName: 'promptx' });
 
@@ -443,6 +460,14 @@ function showWhatsNew() {
   console.log(chalk.gray('─'.repeat(50)));
   
   const updates = [
+    {
+      version: '1.2.1',
+      changes: [
+        '🔔 Automatic update notifications when new versions are available',
+        '📦 Shows update command: npm install -g @lukaloehr/promptx',
+        '⏰ Checks for updates once per day'
+      ]
+    },
     {
       version: '1.2.0',
       changes: [

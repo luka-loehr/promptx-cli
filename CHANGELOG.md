@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1] - 2025-08-02
+
+### Added
+- 🔔 Automatic update notifications when new versions are available
+- 📦 Shows update command in notification: `npm install -g @lukaloehr/promptx`
+- ⏰ Update check runs once per day to avoid being intrusive
+
 ## [1.2.0] - 2025-08-02
 
 ### Added
