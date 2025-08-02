@@ -1,58 +1,34 @@
 # promptx
 
-A CLI tool that transforms messy prompts into structured, clear prompts for AI agents using GPT-4o.
+Transform messy prompts into structured, clear prompts for AI agents.
 
-## Installation
+## Quick Install
 
 ```bash
-npm install -g @lukaloehr/promptx
-```
-
-If you get a permissions error, you can either:
-
-1. Use sudo (not recommended):
-```bash
-sudo npm install -g @lukaloehr/promptx
-```
-
-2. Configure npm to use a different directory (recommended):
-```bash
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
 npm install -g @lukaloehr/promptx
 ```
 
 ## Usage
 
-### First Time Setup
-
-When you run `promptx` for the first time, you'll be prompted to enter your OpenAI API key. This key will be securely stored for future sessions.
-
-### Basic Usage
-
 ```bash
-# Interactive mode - type your prompt after running the command
+# Interactive mode
 promptx
 
-# Direct prompt from command line
-promptx "make a function that sorts array but also handle edge cases like null undefined etc"
+# Direct mode
+promptx "your messy prompt here"
+
+# Reset API key
+promptx reset
 ```
 
-### Commands
+## Example
 
-- `promptx` - Run the prompt refinement tool
-- `promptx reset` - Reset your stored OpenAI API key
-
-### Example
-
-Input:
+**Input:**
 ```
 make a function that sorts array but also handle edge cases like null undefined etc
 ```
 
-Output:
+**Output:**
 ```
 Create a JavaScript function that sorts an array with the following requirements:
 
@@ -69,18 +45,26 @@ Create a JavaScript function that sorts an array with the following requirements
 7. Include parameter validation and appropriate error handling
 ```
 
-### Features
-
-- Transform messy, unclear prompts into well-structured prompts
-- Simple interactive prompt input - just type and press Enter
-- Secure API key storage
-- Beautiful CLI interface with colors and spinners
-- Direct command-line usage for quick refinements
-
 ## Requirements
 
 - Node.js >= 16.0.0
-- OpenAI API key
+- OpenAI API key (you'll be prompted on first run)
+
+## Troubleshooting
+
+If you get a permissions error during installation:
+
+```bash
+# Option 1: Configure npm to use a different directory
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+npm install -g @lukaloehr/promptx
+
+# Option 2: Use sudo (not recommended)
+sudo npm install -g @lukaloehr/promptx
+```
 
 ## License
 

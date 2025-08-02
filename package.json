@@ -1,11 +1,11 @@
 {
   "name": "@lukaloehr/promptx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool that transforms messy prompts into structured, clear prompts for AI agents",
   "type": "module",
   "main": "index.js",
   "bin": {
-    "promptx": "./bin/promptx.js"
+    "promptx": "bin/promptx.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,7 +21,7 @@
   "author": "Luka Loehr",
   "repository": {
     "type": "git",
-    "url": "https://github.com/luka-loehr/promptx-cli.git"
+    "url": "git+https://github.com/luka-loehr/promptx-cli.git"
   },
   "bugs": {
     "url": "https://github.com/luka-loehr/promptx-cli/issues"
