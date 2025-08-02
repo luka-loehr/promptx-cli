@@ -1,6 +1,20 @@
 # Changelog
 
-## [1.1.0] - Upcoming
+## [1.2.0] - 2025-08-02
+
+### Added
+- 🚀 xAI Grok support: Grok 3, Grok 3 Mini, Grok 4, Grok 4 Heavy
+- 🧠 Updated Claude models: Sonnet 4 and Opus 4
+- 🤖 Updated OpenAI models: O4 Mini and O3
+- 📁 Organized model selection by provider for better UX
+- 🎯 Provider-first selection in setup wizard
+
+### Changed
+- Models are now grouped by provider in the selection menu
+- Improved model descriptions with performance indicators
+- Updated API key validation for xAI
+
+## [1.1.0] - 2025-08-02
 
 ### Added
 - 🤖 Multi-model support: Choose between multiple AI providers

@@ -20,46 +20,78 @@ const config = new Conf({ projectName: 'promptx' });
 const MODELS = {
   openai: {
     'gpt-4o': { name: 'GPT-4o', provider: 'openai' },
-    'gpt-4o-mini': { name: 'GPT-4o Mini', provider: 'openai' },
+    'o4-mini': { name: 'O4 Mini', provider: 'openai' },
     'o3': { name: 'O3', provider: 'openai' }
   },
   anthropic: {
-    'claude-3-5-sonnet-20241022': { name: 'Claude 3.5 Sonnet', provider: 'anthropic' },
-    'claude-3-opus-20240229': { name: 'Claude 3 Opus', provider: 'anthropic' }
+    'claude-3-5-sonnet-20241022': { name: 'Claude 3.5 Sonnet (Legacy)', provider: 'anthropic' },
+    'claude-3-5-sonnet-v4': { name: 'Claude Sonnet 4', provider: 'anthropic' },
+    'claude-3-opus-v4': { name: 'Claude Opus 4', provider: 'anthropic' }
+  },
+  xai: {
+    'grok-3': { name: 'Grok 3', provider: 'xai' },
+    'grok-3-mini': { name: 'Grok 3 Mini', provider: 'xai' },
+    'grok-4': { name: 'Grok 4', provider: 'xai' },
+    'grok-4-heavy': { name: 'Grok 4 Heavy', provider: 'xai' }
   }
 };
 
-const ALL_MODELS = { ...MODELS.openai, ...MODELS.anthropic };
+const ALL_MODELS = { ...MODELS.openai, ...MODELS.anthropic, ...MODELS.xai };
 
 async function setupWizard() {
   console.log(chalk.blue('\n🚀 Welcome to promptx!'));
   console.log(chalk.gray('Let\'s set up your AI model preferences.\n'));
   
-  // Model selection
-  const modelChoices = [
-    { name: '🤖 GPT-4o (OpenAI)', value: 'gpt-4o' },
-    { name: '🤖 GPT-4o Mini (OpenAI)', value: 'gpt-4o-mini' },
-    { name: '🤖 O3 (OpenAI)', value: 'o3' },
-    { name: '🧠 Claude 3.5 Sonnet (Anthropic)', value: 'claude-3-5-sonnet-20241022' },
-    { name: '🧠 Claude 3 Opus (Anthropic)', value: 'claude-3-opus-20240229' }
-  ];
+  // Provider selection first
+  const { provider } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'provider',
+      message: 'Which AI provider would you like to use?',
+      choices: [
+        { name: '🤖 OpenAI (GPT-4o, O4 Mini, O3)', value: 'openai' },
+        { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
+        { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' }
+      ]
+    }
+  ]);
+  
+  // Model selection based on provider
+  let modelChoices = [];
+  if (provider === 'openai') {
+    modelChoices = [
+      { name: 'GPT-4o (Most capable)', value: 'gpt-4o' },
+      { name: 'O4 Mini (Fast & efficient)', value: 'o4-mini' },
+      { name: 'O3 (Advanced reasoning)', value: 'o3' }
+    ];
+  } else if (provider === 'anthropic') {
+    modelChoices = [
+      { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-3-5-sonnet-v4' },
+      { name: 'Claude Opus 4 (Most powerful)', value: 'claude-3-opus-v4' },
+      { name: 'Claude 3.5 Sonnet (Legacy)', value: 'claude-3-5-sonnet-20241022' }
+    ];
+  } else {
+    modelChoices = [
+      { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
+      { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
+      { name: 'Grok 4 (Most intelligent)', value: 'grok-4' },
+      { name: 'Grok 4 Heavy (Ultimate power)', value: 'grok-4-heavy' }
+    ];
+  }
   
   const { selectedModel } = await inquirer.prompt([
     {
       type: 'list',
       name: 'selectedModel',
-      message: 'Which AI model would you like to use?',
+      message: 'Select your model:',
       choices: modelChoices
     }
   ]);
   
-  const modelInfo = ALL_MODELS[selectedModel];
-  const provider = modelInfo.provider;
-  
   // API key setup based on provider
   let apiKey;
   if (provider === 'openai') {
-    console.log(chalk.yellow('\nYou\'ll need an OpenAI API key to use ' + modelInfo.name));
+    console.log(chalk.yellow('\nYou\'ll need an OpenAI API key'));
     console.log(chalk.gray('Get one at: https://platform.openai.com/api-keys\n'));
     
     const { openaiKey } = await inquirer.prompt([
@@ -80,8 +112,8 @@ async function setupWizard() {
     ]);
     apiKey = openaiKey;
     config.set('openai_api_key', apiKey);
-  } else {
-    console.log(chalk.yellow('\nYou\'ll need an Anthropic API key to use ' + modelInfo.name));
+  } else if (provider === 'anthropic') {
+    console.log(chalk.yellow('\nYou\'ll need an Anthropic API key'));
     console.log(chalk.gray('Get one at: https://console.anthropic.com/settings/keys\n'));
     
     const { anthropicKey } = await inquirer.prompt([
@@ -102,12 +134,36 @@ async function setupWizard() {
     ]);
     apiKey = anthropicKey;
     config.set('anthropic_api_key', apiKey);
+  } else {
+    console.log(chalk.yellow('\nYou\'ll need an xAI API key'));
+    console.log(chalk.gray('Get one at: https://console.x.ai/\n'));
+    
+    const { xaiKey } = await inquirer.prompt([
+      {
+        type: 'password',
+        name: 'xaiKey',
+        message: 'Enter your xAI API key:',
+        validate: (input) => {
+          if (!input || input.trim() === '') {
+            return 'API key cannot be empty';
+          }
+          if (!input.startsWith('xai-')) {
+            return 'Invalid API key format. xAI API keys start with "xai-"';
+          }
+          return true;
+        }
+      }
+    ]);
+    apiKey = xaiKey;
+    config.set('xai_api_key', apiKey);
   }
   
   config.set('selected_model', selectedModel);
   config.set('setup_complete', true);
   
+  const modelInfo = ALL_MODELS[selectedModel];
   console.log(chalk.green('\n✅ Setup complete!'));
+  console.log(chalk.gray(`Provider: ${provider.toUpperCase()}`));
   console.log(chalk.gray(`Model: ${modelInfo.name}`));
   console.log(chalk.gray('You can change your model anytime by typing /model\n'));
 }
@@ -131,12 +187,19 @@ async function getOrSetupConfig() {
       await setupWizard();
       apiKey = config.get('openai_api_key');
     }
-  } else {
+  } else if (provider === 'anthropic') {
     apiKey = config.get('anthropic_api_key');
     if (!apiKey) {
       console.log(chalk.yellow('Anthropic API key not found. Running setup...'));
       await setupWizard();
       apiKey = config.get('anthropic_api_key');
+    }
+  } else {
+    apiKey = config.get('xai_api_key');
+    if (!apiKey) {
+      console.log(chalk.yellow('xAI API key not found. Running setup...'));
+      await setupWizard();
+      apiKey = config.get('xai_api_key');
     }
   }
   
@@ -151,26 +214,51 @@ async function changeModel() {
   
   console.log(chalk.gray(`Current model: ${currentModelInfo.name}\n`));
   
-  const modelChoices = [
-    { name: '🤖 GPT-4o (OpenAI)', value: 'gpt-4o' },
-    { name: '🤖 GPT-4o Mini (OpenAI)', value: 'gpt-4o-mini' },
-    { name: '🤖 O3 (OpenAI)', value: 'o3' },
-    { name: '🧠 Claude 3.5 Sonnet (Anthropic)', value: 'claude-3-5-sonnet-20241022' },
-    { name: '🧠 Claude 3 Opus (Anthropic)', value: 'claude-3-opus-20240229' }
-  ];
+  // Provider selection
+  const { provider } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'provider',
+      message: 'Which AI provider would you like to use?',
+      choices: [
+        { name: '🤖 OpenAI (GPT-4o, O4 Mini, O3)', value: 'openai' },
+        { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
+        { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' }
+      ]
+    }
+  ]);
+  
+  // Model selection based on provider
+  let modelChoices = [];
+  if (provider === 'openai') {
+    modelChoices = [
+      { name: 'GPT-4o (Most capable)', value: 'gpt-4o' },
+      { name: 'O4 Mini (Fast & efficient)', value: 'o4-mini' },
+      { name: 'O3 (Advanced reasoning)', value: 'o3' }
+    ];
+  } else if (provider === 'anthropic') {
+    modelChoices = [
+      { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-3-5-sonnet-v4' },
+      { name: 'Claude Opus 4 (Most powerful)', value: 'claude-3-opus-v4' },
+      { name: 'Claude 3.5 Sonnet (Legacy)', value: 'claude-3-5-sonnet-20241022' }
+    ];
+  } else {
+    modelChoices = [
+      { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
+      { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
+      { name: 'Grok 4 (Most intelligent)', value: 'grok-4' },
+      { name: 'Grok 4 Heavy (Ultimate power)', value: 'grok-4-heavy' }
+    ];
+  }
   
   const { selectedModel } = await inquirer.prompt([
     {
       type: 'list',
       name: 'selectedModel',
-      message: 'Select a new model:',
-      choices: modelChoices,
-      default: currentModel
+      message: 'Select your model:',
+      choices: modelChoices
     }
   ]);
-  
-  const modelInfo = ALL_MODELS[selectedModel];
-  const provider = modelInfo.provider;
   
   // Check if we need API key for this provider
   if (provider === 'openai' && !config.get('openai_api_key')) {
@@ -211,9 +299,29 @@ async function changeModel() {
       }
     ]);
     config.set('anthropic_api_key', anthropicKey);
+  } else if (provider === 'xai' && !config.get('xai_api_key')) {
+    console.log(chalk.yellow('\nYou need an xAI API key for this model.'));
+    const { xaiKey } = await inquirer.prompt([
+      {
+        type: 'password',
+        name: 'xaiKey',
+        message: 'Enter your xAI API key:',
+        validate: (input) => {
+          if (!input || input.trim() === '') {
+            return 'API key cannot be empty';
+          }
+          if (!input.startsWith('xai-')) {
+            return 'Invalid API key format. xAI API keys start with "xai-"';
+          }
+          return true;
+        }
+      }
+    ]);
+    config.set('xai_api_key', xaiKey);
   }
   
   config.set('selected_model', selectedModel);
+  const modelInfo = ALL_MODELS[selectedModel];
   console.log(chalk.green(`\n✅ Switched to ${modelInfo.name}`));
 }
 
@@ -278,16 +386,39 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         max_tokens: 2000
       });
       refinedPrompt = completion.choices[0].message.content;
-    } else {
+    } else if (modelInfo.provider === 'anthropic') {
       const anthropic = new Anthropic({ apiKey });
+      // Map model names to actual API model IDs
+      let apiModelId = selectedModel;
+      if (selectedModel === 'claude-3-5-sonnet-v4') {
+        apiModelId = 'claude-3-5-sonnet-20241022'; // Use latest available
+      } else if (selectedModel === 'claude-3-opus-v4') {
+        apiModelId = 'claude-3-opus-20240229'; // Use latest available
+      }
       const completion = await anthropic.messages.create({
-        model: selectedModel,
+        model: apiModelId,
         messages: [{ role: 'user', content: messyPrompt }],
         system: systemPrompt,
         temperature: 0.3,
         max_tokens: 2000
       });
       refinedPrompt = completion.content[0].text;
+    } else if (modelInfo.provider === 'xai') {
+      // xAI is compatible with OpenAI's API
+      const xai = new OpenAI({ 
+        apiKey,
+        baseURL: 'https://api.x.ai/v1'
+      });
+      const completion = await xai.chat.completions.create({
+        model: selectedModel,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: messyPrompt }
+        ],
+        temperature: 0.3,
+        max_tokens: 2000
+      });
+      refinedPrompt = completion.choices[0].message.content;
     }
     
     spinner.stop();
@@ -312,6 +443,16 @@ function showWhatsNew() {
   console.log(chalk.gray('─'.repeat(50)));
   
   const updates = [
+    {
+      version: '1.2.0',
+      changes: [
+        '🚀 Added xAI Grok support: Grok 3, Grok 3 Mini, Grok 4, Grok 4 Heavy',
+        '🧠 Updated Claude models: Sonnet 4 and Opus 4',
+        '🤖 Updated OpenAI models: O4 Mini and O3',
+        '📁 Organized model selection by provider',
+        '🎯 Better model categorization in setup wizard'
+      ]
+    },
     {
       version: '1.1.0',
       changes: [
