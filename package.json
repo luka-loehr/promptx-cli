@@ -1,6 +1,6 @@
 {
   "name": "@lukaloehr/promptx",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CLI tool that transforms messy prompts into structured, clear prompts for AI agents",
   "type": "module",
   "main": "index.js",
@@ -8,7 +8,8 @@
     "promptx": "bin/promptx.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node scripts/postinstall.js"
   },
   "keywords": [
     "cli",

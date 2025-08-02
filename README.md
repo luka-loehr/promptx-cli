@@ -1,12 +1,19 @@
 # promptx
 
+[![npm version](https://img.shields.io/npm/v/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
+[![npm downloads](https://img.shields.io/npm/dm/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
+
 Transform messy prompts into structured, clear prompts for AI agents.
 
-## Quick Install
+## 🚀 Quick Install (Global CLI Tool)
+
+This is a **global CLI tool** - install it globally to use the `promptx` command from anywhere:
 
 ```bash
 npm install -g @lukaloehr/promptx
 ```
+
+> **Note:** The `-g` flag is required for global installation. Without it, the `promptx` command won't be available in your terminal.
 
 ## Usage
 
