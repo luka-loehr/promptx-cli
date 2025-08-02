@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 [![npm downloads](https://img.shields.io/npm/dm/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 
-Transform messy prompts into structured, clear prompts for AI agents.
+Transform messy prompts into structured, clear prompts for AI agents. Supports multiple AI models including GPT-4o, Claude 3.5 Sonnet, and more!
 
 ## 🚀 Quick Install (Global CLI Tool)
 
@@ -15,6 +15,11 @@ npm install -g @lukaloehr/promptx
 
 > **Note:** The `-g` flag is required for global installation. Without it, the `promptx` command won't be available in your terminal.
 
+## 🤖 Supported Models
+
+- **OpenAI**: GPT-4o, GPT-4o Mini, O3
+- **Anthropic**: Claude 3.5 Sonnet, Claude 3 Opus
+
 ## Usage
 
 ```bash
@@ -24,7 +29,13 @@ promptx
 # Direct mode
 promptx "your messy prompt here"
 
-# Reset API key
+# Switch models
+promptx /model
+
+# See what's new
+promptx /whats-new
+
+# Reset configuration
 promptx reset
 ```
 
@@ -52,10 +63,16 @@ Create a JavaScript function that sorts an array with the following requirements
 7. Include parameter validation and appropriate error handling
 ```
 
+## First Run Setup
+
+On first run, promptx will guide you through:
+1. Selecting your preferred AI model
+2. Entering the appropriate API key (OpenAI or Anthropic)
+
 ## Requirements
 
 - Node.js >= 16.0.0
-- OpenAI API key (you'll be prompted on first run)
+- API key from OpenAI or Anthropic (depending on your chosen model)
 
 ## Troubleshooting
 
