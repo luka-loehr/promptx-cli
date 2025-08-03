@@ -2,6 +2,17 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [3.4.6] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Changed
+- 🔄 Reverted README to previous format per user request
+- 📚 Restored the original README structure from v3.4.3
+- 🔧 Updated version references to v3.4.5
+
+### Technical Details
+- README now uses the previous format that was preferred
+- Version numbers in README updated to reflect current stable release
+
 ## [3.4.5] - 2025-08-03 - STABLE RELEASE 🎉
 
 ### Changed
