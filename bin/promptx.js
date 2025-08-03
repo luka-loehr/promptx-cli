@@ -401,7 +401,8 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
           { role: 'system', content: systemPrompt },
           { role: 'user', content: messyPrompt }
         ],
-        temperature: 0.3
+        temperature: 0.3,
+        stream: true
       };
       
       // Newer models use max_completion_tokens
@@ -411,19 +412,31 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         completionParams.max_tokens = 2000;
       }
       
-      const completion = await openai.chat.completions.create(completionParams);
-      refinedPrompt = completion.choices[0].message.content;
+      const stream = await openai.chat.completions.create(completionParams);
+      refinedPrompt = '';
+      for await (const chunk of stream) {
+        if (chunk.choices[0]?.delta?.content) {
+          refinedPrompt += chunk.choices[0].delta.content;
+        }
+      }
     } else if (modelInfo.provider === 'anthropic') {
       const anthropic = new Anthropic({ apiKey });
       
-      const completion = await anthropic.messages.create({
+      const stream = await anthropic.messages.create({
         model: selectedModel,
         messages: [{ role: 'user', content: messyPrompt }],
         system: systemPrompt,
         temperature: 0.3,
-        max_tokens: selectedModel === 'claude-opus-4' ? 32000 : 64000 // Opus 4: 32k, Sonnet 4: 64k
+        max_tokens: selectedModel === 'claude-opus-4' ? 32000 : 64000, // Opus 4: 32k, Sonnet 4: 64k
+        stream: true
       });
-      refinedPrompt = completion.content[0].text;
+      
+      refinedPrompt = '';
+      for await (const chunk of stream) {
+        if (chunk.type === 'content_block_delta' && chunk.delta?.text) {
+          refinedPrompt += chunk.delta.text;
+        }
+      }
     } else if (modelInfo.provider === 'xai') {
       // xAI is compatible with OpenAI's API
       const xai = new OpenAI({ 
@@ -436,7 +449,8 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: messyPrompt }
-        ]
+        ],
+        stream: true
       };
       
       // Grok 4 is a reasoning model - no temperature/frequency/presence penalties
@@ -449,8 +463,13 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         completionParams.max_tokens = 100000; // Max 100k tokens for Grok models
       }
       
-      const completion = await xai.chat.completions.create(completionParams);
-      refinedPrompt = completion.choices[0].message.content;
+      const stream = await xai.chat.completions.create(completionParams);
+      refinedPrompt = '';
+      for await (const chunk of stream) {
+        if (chunk.choices[0]?.delta?.content) {
+          refinedPrompt += chunk.choices[0].delta.content;
+        }
+      }
     }
     
     spinner.stop();

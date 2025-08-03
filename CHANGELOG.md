@@ -2,7 +2,23 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.2.0] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.2.1] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Fixed
+- 🐛 Fixed API streaming errors for long operations across all providers
+- ✅ Added proper streaming support for all models to prevent timeout errors
+
+### Enhanced
+- 🚀 Enabled streaming for OpenAI models (GPT-4o, O4 Mini, O3)
+- 🚀 Enabled streaming for Anthropic models (Claude Opus 4, Sonnet 4)
+- 🚀 Enabled streaming for xAI models (Grok 3, Grok 4)
+
+### Technical Details
+- All API calls now use `stream: true` parameter
+- Properly handles streaming response chunks for reliable operation
+- Prevents timeout errors for long-running prompt refinements
+
+## [3.2.0] - 2025-08-03 - STABLE RELEASE
 
 This is the **official stable release** of promptx! This version contains all the essential features and bug fixes for production use.
 
