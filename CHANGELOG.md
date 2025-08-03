@@ -2,7 +2,24 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.2.4] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.3.0] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Added
+- 🚀 GPT-4.1 model support (replaces O3)
+- 🤔 Thinking spinner for thinking models (O4 Mini, Grok 4, Grok 4 Heavy)
+- ⏳ Shows "Thinking..." while models process before streaming
+
+### Changed
+- 🔄 Replaced O3 model with GPT-4.1
+- 📝 Updated model descriptions to indicate thinking models
+- 🎯 Marked O4 Mini, Grok 4, and Grok 4 Heavy as thinking models
+
+### Technical Details
+- Added isThinkingModel flag to model configurations
+- Thinking spinner appears until first streaming chunk arrives
+- Improved user experience for models with longer initial processing times
+
+## [3.2.4] - 2025-08-03 - STABLE RELEASE
 
 ### Fixed
 - 🐛 Fixed O4 Mini and O3 temperature parameter error

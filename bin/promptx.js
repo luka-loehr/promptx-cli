@@ -81,8 +81,8 @@ const config = new Conf({ projectName: 'promptx' });
 const MODELS = {
   openai: {
     'gpt-4o': { name: 'GPT-4o', provider: 'openai' },
-    'o4-mini': { name: 'O4 Mini', provider: 'openai' },
-    'o3': { name: 'O3', provider: 'openai' }
+    'o4-mini': { name: 'O4 Mini', provider: 'openai', isThinkingModel: true },
+    'gpt-4.1': { name: 'GPT-4.1', provider: 'openai' }
   },
   anthropic: {
     'claude-3-5-sonnet-20241022': { name: 'Claude 3.5 Sonnet', provider: 'anthropic' },
@@ -92,8 +92,8 @@ const MODELS = {
   xai: {
     'grok-3': { name: 'Grok 3', provider: 'xai' },
     'grok-3-mini': { name: 'Grok 3 Mini', provider: 'xai' },
-    'grok-4': { name: 'Grok 4', provider: 'xai' },
-    'grok-4-heavy': { name: 'Grok 4 Heavy', provider: 'xai' }
+    'grok-4': { name: 'Grok 4', provider: 'xai', isThinkingModel: true },
+    'grok-4-heavy': { name: 'Grok 4 Heavy', provider: 'xai', isThinkingModel: true }
   }
 };
 
@@ -110,7 +110,7 @@ async function setupWizard() {
       name: 'provider',
       message: 'Which AI provider would you like to use?',
       choices: [
-        { name: '🤖 OpenAI (GPT-4o, O4 Mini, O3)', value: 'openai' },
+        { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
         { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
         { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' }
       ]
@@ -122,8 +122,8 @@ async function setupWizard() {
   if (provider === 'openai') {
     modelChoices = [
       { name: 'GPT-4o (Most capable)', value: 'gpt-4o' },
-      { name: 'O4 Mini (Fast & efficient)', value: 'o4-mini' },
-      { name: 'O3 (Advanced reasoning)', value: 'o3' }
+      { name: 'O4 Mini (Thinking model, efficient)', value: 'o4-mini' },
+      { name: 'GPT-4.1 (Latest version)', value: 'gpt-4.1' }
     ];
   } else if (provider === 'anthropic') {
     modelChoices = [
@@ -135,8 +135,8 @@ async function setupWizard() {
     modelChoices = [
       { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
-      { name: 'Grok 4 (Most intelligent)', value: 'grok-4' },
-      { name: 'Grok 4 Heavy (Ultimate power)', value: 'grok-4-heavy' }
+      { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' },
+      { name: 'Grok 4 Heavy (Thinking model, ultimate)', value: 'grok-4-heavy' }
     ];
   }
   
@@ -282,7 +282,7 @@ async function changeModel() {
       name: 'provider',
       message: 'Which AI provider would you like to use?',
       choices: [
-        { name: '🤖 OpenAI (GPT-4o, O4 Mini, O3)', value: 'openai' },
+        { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
         { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
         { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' }
       ]
@@ -294,8 +294,8 @@ async function changeModel() {
   if (provider === 'openai') {
     modelChoices = [
       { name: 'GPT-4o (Most capable)', value: 'gpt-4o' },
-      { name: 'O4 Mini (Fast & efficient)', value: 'o4-mini' },
-      { name: 'O3 (Advanced reasoning)', value: 'o3' }
+      { name: 'O4 Mini (Thinking model, efficient)', value: 'o4-mini' },
+      { name: 'GPT-4.1 (Latest version)', value: 'gpt-4.1' }
     ];
   } else if (provider === 'anthropic') {
     modelChoices = [
@@ -307,8 +307,8 @@ async function changeModel() {
     modelChoices = [
       { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
-      { name: 'Grok 4 (Most intelligent)', value: 'grok-4' },
-      { name: 'Grok 4 Heavy (Ultimate power)', value: 'grok-4-heavy' }
+      { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' },
+      { name: 'Grok 4 Heavy (Thinking model, ultimate)', value: 'grok-4-heavy' }
     ];
   }
   
@@ -438,7 +438,7 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
     if (modelInfo.provider === 'openai') {
       const openai = new OpenAI({ apiKey });
       
-      // Use max_completion_tokens for newer models (o4-mini, o3)
+      // Use max_completion_tokens for newer models
       const completionParams = {
         model: selectedModel,
         messages: [
@@ -448,8 +448,8 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         stream: true
       };
       
-      // Newer models use max_completion_tokens and don't support temperature
-      if (selectedModel === 'o4-mini' || selectedModel === 'o3') {
+      // O4 Mini is a thinking model and doesn't support temperature
+      if (selectedModel === 'o4-mini') {
         completionParams.max_completion_tokens = 2000;
       } else {
         completionParams.max_tokens = 2000;
@@ -461,11 +461,25 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
       console.log(chalk.green('REFINED PROMPT:'));
       console.log(chalk.gray('─'.repeat(80)) + '\n');
       
+      // Show thinking spinner for thinking models
+      let thinkingSpinner;
+      if (modelInfo.isThinkingModel) {
+        thinkingSpinner = ora('Thinking...').start();
+      }
+      
       const streamWriter = createStreamWriter();
       const stream = await openai.chat.completions.create(completionParams);
       refinedPrompt = '';
+      let firstChunk = true;
+      
       for await (const chunk of stream) {
         if (chunk.choices[0]?.delta?.content) {
+          // Stop thinking spinner on first chunk
+          if (firstChunk && thinkingSpinner) {
+            thinkingSpinner.stop();
+            firstChunk = false;
+          }
+          
           const content = chunk.choices[0].delta.content;
           streamWriter.write(content);
           refinedPrompt += content;
@@ -534,11 +548,25 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
       console.log(chalk.green('REFINED PROMPT:'));
       console.log(chalk.gray('─'.repeat(80)) + '\n');
       
+      // Show thinking spinner for thinking models
+      let thinkingSpinner;
+      if (modelInfo.isThinkingModel) {
+        thinkingSpinner = ora('Thinking...').start();
+      }
+      
       const streamWriter = createStreamWriter();
       const stream = await xai.chat.completions.create(completionParams);
       refinedPrompt = '';
+      let firstChunk = true;
+      
       for await (const chunk of stream) {
         if (chunk.choices[0]?.delta?.content) {
+          // Stop thinking spinner on first chunk
+          if (firstChunk && thinkingSpinner) {
+            thinkingSpinner.stop();
+            firstChunk = false;
+          }
+          
           const content = chunk.choices[0].delta.content;
           streamWriter.write(content);
           refinedPrompt += content;
@@ -580,7 +608,7 @@ function showHelp() {
   console.log(chalk.white('  promptx reset              ') + chalk.gray('- Reset configuration'));
   
   console.log(chalk.green('\n🤖 Supported Providers:'));
-  console.log(chalk.white('  • OpenAI    ') + chalk.gray('- GPT-4o, O4 Mini, O3'));
+  console.log(chalk.white('  • OpenAI    ') + chalk.gray('- GPT-4o, O4 Mini, GPT-4.1'));
   console.log(chalk.white('  • Anthropic ') + chalk.gray('- Claude Sonnet 4, Opus 4'));
   console.log(chalk.white('  • xAI       ') + chalk.gray('- Grok 3, Grok 4'));
   

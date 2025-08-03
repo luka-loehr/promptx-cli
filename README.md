@@ -5,7 +5,7 @@
 
 Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, and xAI!
 
-## 🎉 Version 3.2.4 - Stable Release
+## 🎉 Version 3.3.0 - Stable Release
 
 This is the **stable, production-ready** version of promptx! 
 
@@ -15,9 +15,11 @@ This is the **stable, production-ready** version of promptx!
 npm install -g @lukaloehr/promptx@latest
 ```
 
-**What's included in v3.2.4:**
+**What's included in v3.3.0:**
 - ✅ Full multi-provider support (OpenAI, Anthropic, xAI)
-- ✅ All API compatibility issues fixed (O4 Mini, Claude 4, Grok 4)
+- ✅ Replaced O3 with GPT-4.1 (latest model)
+- ✅ Thinking spinner for O4 Mini, Grok 4, and Grok 4 Heavy
+- ✅ All API compatibility issues fixed
 - ✅ Real-time streaming output with proper word wrapping
 - ✅ Respects terminal width boundaries
 - ✅ Streaming enabled for all providers (prevents timeout errors)
@@ -38,8 +40,8 @@ npm install -g @lukaloehr/promptx
 
 ### OpenAI
 - **GPT-4o** - Most capable general model
-- **O4 Mini** - Fast and efficient
-- **O3** - Advanced reasoning
+- **O4 Mini** - Thinking model, efficient
+- **GPT-4.1** - Latest version
 
 ### Anthropic  
 - **Claude Opus 4** - Most powerful, world's best coding model
@@ -49,8 +51,8 @@ npm install -g @lukaloehr/promptx
 ### xAI (Grok)
 - **Grok 3** - Advanced reasoning
 - **Grok 3 Mini** - Cost-efficient
-- **Grok 4** - Most intelligent
-- **Grok 4 Heavy** - Ultimate power
+- **Grok 4** - Thinking model, intelligent
+- **Grok 4 Heavy** - Thinking model, ultimate power
 
 ## Usage
 
