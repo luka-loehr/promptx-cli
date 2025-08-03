@@ -2,6 +2,30 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [2.0.0] - 2025-08-03 - STABLE RELEASE 🎉
+
+This is the **official stable release** of promptx! This version contains all the essential features and bug fixes for production use.
+
+### What's Included
+- ✅ **Complete multi-provider support**: OpenAI, Anthropic, and xAI
+- ✅ **All API compatibility issues resolved**: 
+  - O4 Mini and O3 models use correct `max_completion_tokens` parameter
+  - Claude 4 models use proper identifiers (`claude-opus-4`, `claude-sonnet-4`)
+  - Grok 4 reasoning models have correct API parameters
+- ✅ **Stable, tested codebase** with no experimental features
+- ✅ **Complete feature set**: Interactive wizard, model switching, help system
+
+### Why Upgrade?
+- 🔒 **Production ready**: No more beta features or experimental code
+- 🐛 **Bug-free**: All known API compatibility issues resolved
+- 🚀 **Performance**: Optimized for reliability and speed
+- 📚 **Complete documentation**: Full help system and clear usage instructions
+
+**Upgrade command:**
+```bash
+npm install -g @lukaloehr/promptx@latest
+```
+
 ## [1.3.1] - 2025-08-02
 
 ### Fixed

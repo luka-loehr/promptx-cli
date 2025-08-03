@@ -5,6 +5,22 @@
 
 Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, and xAI!
 
+## 🎉 Version 2.0.0 - Stable Release
+
+This is the **stable, production-ready** version of promptx! 
+
+🚨 **Important:** If you're using an older version, please upgrade immediately:
+
+```bash
+npm install -g @lukaloehr/promptx@latest
+```
+
+**What's included in v2.0.0:**
+- ✅ Full multi-provider support (OpenAI, Anthropic, xAI)
+- ✅ All API compatibility issues fixed (O4 Mini, Claude 4, Grok 4)
+- ✅ Stable, tested codebase
+- ✅ Complete feature set
+
 ## 🚀 Quick Install (Global CLI Tool)
 
 This is a **global CLI tool** - install it globally to use the `promptx` command from anywhere:
