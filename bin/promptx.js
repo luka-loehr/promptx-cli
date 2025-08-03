@@ -11,10 +11,54 @@ import updateNotifier from 'update-notifier';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import wrapAnsi from 'wrap-ansi';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+
+// Helper function for streaming with word wrap
+function createStreamWriter() {
+  const terminalWidth = process.stdout.columns || 80;
+  const maxWidth = Math.min(terminalWidth - 4, 76); // Leave some margin
+  let buffer = '';
+  
+  return {
+    write(text) {
+      buffer += text;
+      const lines = buffer.split('\n');
+      
+      // Process all complete lines
+      for (let i = 0; i < lines.length - 1; i++) {
+        const wrappedLine = wrapAnsi(lines[i], maxWidth, { hard: true, wordWrap: true });
+        console.log(wrappedLine);
+      }
+      
+      // Keep the last incomplete line in buffer
+      buffer = lines[lines.length - 1];
+      
+      // If buffer is getting too long, wrap and flush it
+      if (buffer.length > maxWidth) {
+        const wrappedBuffer = wrapAnsi(buffer, maxWidth, { hard: true, wordWrap: true });
+        const wrappedLines = wrappedBuffer.split('\n');
+        
+        for (let i = 0; i < wrappedLines.length - 1; i++) {
+          console.log(wrappedLines[i]);
+        }
+        
+        buffer = wrappedLines[wrappedLines.length - 1];
+      }
+    },
+    
+    flush() {
+      if (buffer) {
+        const wrappedBuffer = wrapAnsi(buffer, maxWidth, { hard: true, wordWrap: true });
+        console.log(wrappedBuffer);
+        buffer = '';
+      }
+    }
+  };
+}
 
 // Check for updates
 const notifier = updateNotifier({ 
@@ -417,15 +461,17 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
       console.log(chalk.green('REFINED PROMPT:'));
       console.log(chalk.gray('─'.repeat(80)) + '\n');
       
+      const streamWriter = createStreamWriter();
       const stream = await openai.chat.completions.create(completionParams);
       refinedPrompt = '';
       for await (const chunk of stream) {
         if (chunk.choices[0]?.delta?.content) {
           const content = chunk.choices[0].delta.content;
-          process.stdout.write(content);
+          streamWriter.write(content);
           refinedPrompt += content;
         }
       }
+      streamWriter.flush();
       
       console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
     } else if (modelInfo.provider === 'anthropic') {
@@ -445,14 +491,16 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
       console.log(chalk.green('REFINED PROMPT:'));
       console.log(chalk.gray('─'.repeat(80)) + '\n');
       
+      const streamWriter = createStreamWriter();
       refinedPrompt = '';
       for await (const chunk of stream) {
         if (chunk.type === 'content_block_delta' && chunk.delta?.text) {
           const content = chunk.delta.text;
-          process.stdout.write(content);
+          streamWriter.write(content);
           refinedPrompt += content;
         }
       }
+      streamWriter.flush();
       
       console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
     } else if (modelInfo.provider === 'xai') {
@@ -486,15 +534,17 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
       console.log(chalk.green('REFINED PROMPT:'));
       console.log(chalk.gray('─'.repeat(80)) + '\n');
       
+      const streamWriter = createStreamWriter();
       const stream = await xai.chat.completions.create(completionParams);
       refinedPrompt = '';
       for await (const chunk of stream) {
         if (chunk.choices[0]?.delta?.content) {
           const content = chunk.choices[0].delta.content;
-          process.stdout.write(content);
+          streamWriter.write(content);
           refinedPrompt += content;
         }
       }
+      streamWriter.flush();
       
       console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
     }

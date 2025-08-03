@@ -5,7 +5,7 @@
 
 Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, and xAI!
 
-## 🎉 Version 3.2.2 - Stable Release
+## 🎉 Version 3.2.3 - Stable Release
 
 This is the **stable, production-ready** version of promptx! 
 
@@ -15,10 +15,11 @@ This is the **stable, production-ready** version of promptx!
 npm install -g @lukaloehr/promptx@latest
 ```
 
-**What's included in v3.2.2:**
+**What's included in v3.2.3:**
 - ✅ Full multi-provider support (OpenAI, Anthropic, xAI)
 - ✅ All API compatibility issues fixed (O4 Mini, Claude 4, Grok 4)
-- ✅ Real-time streaming output to terminal
+- ✅ Real-time streaming output with proper word wrapping
+- ✅ Respects terminal width boundaries
 - ✅ Streaming enabled for all providers (prevents timeout errors)
 - ✅ Stable, tested codebase
 - ✅ Complete feature set

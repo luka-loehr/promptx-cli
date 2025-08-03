@@ -2,7 +2,20 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.2.2] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.2.3] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Added
+- 📐 Proper word wrapping for streaming output
+- 🖼️ Respects terminal width boundaries
+- 📦 Added wrap-ansi dependency for better text formatting
+
+### Technical Details
+- Streaming output now wraps at terminal boundaries with proper margins
+- Prevents text from running to the edge of the terminal
+- Handles word breaks intelligently to maintain readability
+- Buffer-based approach ensures smooth streaming experience
+
+## [3.2.2] - 2025-08-03 - STABLE RELEASE
 
 ### Added
 - 🚀 Real-time streaming output to terminal
