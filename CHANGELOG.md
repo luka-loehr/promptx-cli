@@ -2,7 +2,22 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.4.4] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.4.5] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Changed
+- 🚨 Added prominent global install command at the top of README
+- ⚠️ Added warning to use -g flag and not npm's suggested command
+- 📐 Restructured README to be more space-efficient
+- 🔄 Moved detailed example to collapsible section at the bottom
+- ✨ Simplified "What is promptx?" section
+
+### Technical Details
+- Install command now appears immediately after title
+- Clear warning about global installation requirement
+- Example transformation now in expandable details section
+- More concise introduction section
+
+## [3.4.4] - 2025-08-03 - STABLE RELEASE
 
 ### Changed
 - 📚 Completely redesigned README with modern structure

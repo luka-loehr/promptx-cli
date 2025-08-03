@@ -2,6 +2,12 @@
 
 <div align="center">
 
+```bash
+npm install -g @lukaloehr/promptx
+```
+
+⚠️ **IMPORTANT**: Use the `-g` flag for global installation. Do NOT use the command suggested by npm without `-g`.
+
 [![npm version](https://img.shields.io/npm/v/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 [![npm downloads](https://img.shields.io/npm/dm/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -16,37 +22,10 @@
 
 ## 🚀 What is promptx?
 
-**promptx** is a CLI tool that transforms your rough, informal developer prompts into highly structured, comprehensive instructions that produce better results from AI coding assistants like Claude, ChatGPT, Cursor, and GitHub Copilot.
+**promptx** transforms messy developer prompts into meticulously crafted instructions for AI coding assistants.
 
-### Before promptx:
-```
-"make api endpoint for users with auth"
-```
-
-### After promptx:
-```
-Create a RESTful API endpoint for user management with JWT authentication in Node.js/Express.
-
-Technical Requirements:
-- Implement GET /api/users endpoint to retrieve all users
-- Add pagination support (limit/offset query parameters)
-- Include JWT token validation middleware
-- Return 401 for invalid/missing tokens
-- Filter sensitive fields (password, refresh tokens) from response
-
-Implementation Guidelines:
-- Use Express Router for endpoint organization
-- Implement proper error handling with try-catch blocks
-- Return consistent JSON response format: { success: boolean, data?: any, error?: string }
-- Add request validation using express-validator
-- Include unit tests using Jest/Supertest
-
-Security Considerations:
-- Validate JWT tokens using RS256 algorithm
-- Check token expiration and issuer claims
-- Implement rate limiting (100 requests per minute)
-- Log authentication failures for security monitoring
-```
+**Before**: `"make api endpoint for users with auth"`  
+**After**: A comprehensive prompt with technical requirements, implementation guidelines, error handling, security considerations, and testing requirements.
 
 ## 📦 Installation
 
@@ -213,6 +192,42 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 💡 Example Transformation
+
+<details>
+<summary>Click to see a full example of prompt transformation</summary>
+
+### Input:
+```
+"make api endpoint for users with auth"
+```
+
+### Output:
+```
+Create a RESTful API endpoint for user management with JWT authentication in Node.js/Express.
+
+Technical Requirements:
+- Implement GET /api/users endpoint to retrieve all users
+- Add pagination support (limit/offset query parameters)
+- Include JWT token validation middleware
+- Return 401 for invalid/missing tokens
+- Filter sensitive fields (password, refresh tokens) from response
+
+Implementation Guidelines:
+- Use Express Router for endpoint organization
+- Implement proper error handling with try-catch blocks
+- Return consistent JSON response format: { success: boolean, data?: any, error?: string }
+- Add request validation using express-validator
+- Include unit tests using Jest/Supertest
+
+Security Considerations:
+- Validate JWT tokens using RS256 algorithm
+- Check token expiration and issuer claims
+- Implement rate limiting (100 requests per minute)
+- Log authentication failures for security monitoring
+```
+</details>
 
 ## 🙏 Acknowledgments
 
