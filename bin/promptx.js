@@ -412,13 +412,22 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         completionParams.max_tokens = 2000;
       }
       
+      spinner.stop();
+      console.log('\n\n' + chalk.gray('─'.repeat(80)));
+      console.log(chalk.green('REFINED PROMPT:'));
+      console.log(chalk.gray('─'.repeat(80)) + '\n');
+      
       const stream = await openai.chat.completions.create(completionParams);
       refinedPrompt = '';
       for await (const chunk of stream) {
         if (chunk.choices[0]?.delta?.content) {
-          refinedPrompt += chunk.choices[0].delta.content;
+          const content = chunk.choices[0].delta.content;
+          process.stdout.write(content);
+          refinedPrompt += content;
         }
       }
+      
+      console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
     } else if (modelInfo.provider === 'anthropic') {
       const anthropic = new Anthropic({ apiKey });
       
@@ -431,12 +440,21 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         stream: true
       });
       
+      spinner.stop();
+      console.log('\n\n' + chalk.gray('─'.repeat(80)));
+      console.log(chalk.green('REFINED PROMPT:'));
+      console.log(chalk.gray('─'.repeat(80)) + '\n');
+      
       refinedPrompt = '';
       for await (const chunk of stream) {
         if (chunk.type === 'content_block_delta' && chunk.delta?.text) {
-          refinedPrompt += chunk.delta.text;
+          const content = chunk.delta.text;
+          process.stdout.write(content);
+          refinedPrompt += content;
         }
       }
+      
+      console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
     } else if (modelInfo.provider === 'xai') {
       // xAI is compatible with OpenAI's API
       const xai = new OpenAI({ 
@@ -463,16 +481,24 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
         completionParams.max_tokens = 100000; // Max 100k tokens for Grok models
       }
       
+      spinner.stop();
+      console.log('\n\n' + chalk.gray('─'.repeat(80)));
+      console.log(chalk.green('REFINED PROMPT:'));
+      console.log(chalk.gray('─'.repeat(80)) + '\n');
+      
       const stream = await xai.chat.completions.create(completionParams);
       refinedPrompt = '';
       for await (const chunk of stream) {
         if (chunk.choices[0]?.delta?.content) {
-          refinedPrompt += chunk.choices[0].delta.content;
+          const content = chunk.choices[0].delta.content;
+          process.stdout.write(content);
+          refinedPrompt += content;
         }
       }
+      
+      console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
     }
     
-    spinner.stop();
     return refinedPrompt;
   } catch (error) {
     spinner.fail('Failed to refine prompt');
@@ -663,13 +689,7 @@ program
       }
     }
     
-    const refinedPrompt = await refinePrompt(messyPrompt, selectedModel, apiKey);
-    
-    console.log('\n\n' + chalk.gray('─'.repeat(80)));
-    console.log(chalk.green('REFINED PROMPT:'));
-    console.log(chalk.gray('─'.repeat(80)) + '\n');
-    console.log(refinedPrompt);
-    console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
+    await refinePrompt(messyPrompt, selectedModel, apiKey);
   });
 
 program.parse();

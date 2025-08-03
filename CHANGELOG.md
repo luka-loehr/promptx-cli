@@ -2,7 +2,19 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.2.1] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.2.2] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Added
+- 🚀 Real-time streaming output to terminal
+- ✨ See refined prompts as they are generated
+- 🎯 Immediate visual feedback during prompt refinement
+
+### Technical Details
+- Removed loading spinner once streaming starts
+- Output streams directly to terminal using process.stdout.write
+- Consistent formatting across all providers
+
+## [3.2.1] - 2025-08-03 - STABLE RELEASE
 
 ### Fixed
 - 🐛 Fixed API streaming errors for long operations across all providers
