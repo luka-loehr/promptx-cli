@@ -2,7 +2,7 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [2.0.0] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.2.0] - 2025-08-03 - STABLE RELEASE 🎉
 
 This is the **official stable release** of promptx! This version contains all the essential features and bug fixes for production use.
 
