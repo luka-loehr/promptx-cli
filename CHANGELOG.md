@@ -2,7 +2,18 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.4.2] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.4.3] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Changed
+- 🔧 Removed npm version from system prompt for easier maintenance
+- 🚫 Removed Grok 4 Heavy (not available via public API)
+
+### Technical Details
+- System prompt no longer contains hardcoded version number
+- Removed Grok 4 Heavy from all model lists and documentation
+- Only Grok 3, Grok 3 Mini, and Grok 4 are available via xAI API
+
+## [3.4.2] - 2025-08-03 - STABLE RELEASE
 
 ### Changed
 - 🎯 Completely redesigned system prompt for better prompt engineering

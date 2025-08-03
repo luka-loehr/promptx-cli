@@ -93,8 +93,7 @@ const MODELS = {
   xai: {
     'grok-3': { name: 'Grok 3', provider: 'xai' },
     'grok-3-mini': { name: 'Grok 3 Mini', provider: 'xai' },
-    'grok-4': { name: 'Grok 4', provider: 'xai', isThinkingModel: true },
-    'grok-4-heavy': { name: 'Grok 4 Heavy', provider: 'xai', isThinkingModel: true }
+    'grok-4': { name: 'Grok 4', provider: 'xai', isThinkingModel: true }
   },
   google: {
     'gemini-2.5-flash': { name: 'Gemini 2.5 Flash', provider: 'google' },
@@ -142,8 +141,7 @@ async function setupWizard() {
     modelChoices = [
       { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
-      { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' },
-      { name: 'Grok 4 Heavy (Thinking model, ultimate)', value: 'grok-4-heavy' }
+      { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
     ];
   } else {
     modelChoices = [
@@ -347,8 +345,7 @@ async function changeModel() {
     modelChoices = [
       { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
-      { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' },
-      { name: 'Grok 4 Heavy (Thinking model, ultimate)', value: 'grok-4-heavy' }
+      { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
     ];
   } else {
     modelChoices = [
@@ -452,7 +449,7 @@ async function refinePrompt(messyPrompt, selectedModel, apiKey) {
   const modelInfo = ALL_MODELS[selectedModel];
   const spinner = ora(`Refining your prompt with ${modelInfo.name}...`).start();
   
-  const systemPrompt = `You are promptx, an expert prompt engineering tool created by Luka Loehr (https://github.com/luka-loehr). You are part of the @lukaloehr/promptx npm package (v3.4.2) - a CLI tool that transforms messy, informal developer prompts into meticulously crafted instructions for AI coding assistants.
+  const systemPrompt = `You are promptx, an expert prompt engineering tool created by Luka Loehr (https://github.com/luka-loehr). You are part of the @lukaloehr/promptx npm package - a CLI tool that transforms messy, informal developer prompts into meticulously crafted instructions for AI coding assistants.
 CRITICAL BEHAVIOR RULES:
 If the user is just chatting, asking about you, or making conversation (e.g., "how are you", "who made you", "what's your npm package", etc.), respond conversationally WITHOUT trying to create a prompt. Answer naturally and always end with: "I can help you with structuring messy prompts into streamlined prompts for AI coding agents like Promptly, Claude Code, or the Gemini CLI."
 For actual prompt requests, follow these rules:
@@ -618,7 +615,7 @@ Transform even the messiest developer thoughts into prompts that produce product
         completionParams.temperature = 0.3;
         completionParams.max_tokens = 2000;
       } else {
-        // Grok 4 and Grok 4 Heavy - reasoning models
+        // Grok 4 - reasoning model
         completionParams.max_tokens = 100000; // Max 100k tokens for Grok models
       }
       
