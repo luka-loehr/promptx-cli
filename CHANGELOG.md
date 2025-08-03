@@ -2,7 +2,27 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.3.0] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.4.0] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Added
+- 🌟 Google AI support with Gemini models
+- 🚀 Gemini 2.5 Flash - Fast and efficient model
+- 🚀 Gemini 2.0 Flash - Previous flash version
+- 🚀 Gemini 2.5 Pro - Most capable Gemini model
+- 🔑 Google AI API key setup and validation
+- 🎯 Full streaming support for Google models
+
+### Changed
+- 📦 Added @google/generative-ai dependency
+- 🤖 Now supports 4 AI providers: OpenAI, Anthropic, xAI, and Google
+- 📚 Updated documentation to include Google setup
+
+### Technical Details
+- Google AI SDK integration using @google/generative-ai
+- Streaming implemented using generateContentStream
+- System and user prompts combined for Google's single-prompt format
+
+## [3.3.0] - 2025-08-03 - STABLE RELEASE
 
 ### Added
 - 🚀 GPT-4.1 model support (replaces O3)

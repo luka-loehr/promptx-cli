@@ -3,9 +3,9 @@
 [![npm version](https://img.shields.io/npm/v/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 [![npm downloads](https://img.shields.io/npm/dm/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 
-Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, and xAI!
+Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
 
-## 🎉 Version 3.3.0 - Stable Release
+## 🎉 Version 3.4.0 - Stable Release
 
 This is the **stable, production-ready** version of promptx! 
 
@@ -15,8 +15,10 @@ This is the **stable, production-ready** version of promptx!
 npm install -g @lukaloehr/promptx@latest
 ```
 
-**What's included in v3.3.0:**
-- ✅ Full multi-provider support (OpenAI, Anthropic, xAI)
+**What's included in v3.4.0:**
+- ✅ NEW: Google AI support with Gemini models
+- ✅ Full multi-provider support (OpenAI, Anthropic, xAI, Google)
+- ✅ Gemini 2.5 Flash, 2.0 Flash, and 2.5 Pro models
 - ✅ Replaced O3 with GPT-4.1 (latest model)
 - ✅ Thinking spinner for O4 Mini, Grok 4, and Grok 4 Heavy
 - ✅ All API compatibility issues fixed
@@ -53,6 +55,11 @@ npm install -g @lukaloehr/promptx
 - **Grok 3 Mini** - Cost-efficient
 - **Grok 4** - Thinking model, intelligent
 - **Grok 4 Heavy** - Thinking model, ultimate power
+
+### Google (Gemini)
+- **Gemini 2.5 Flash** - Fast, efficient
+- **Gemini 2.0 Flash** - Previous flash version
+- **Gemini 2.5 Pro** - Most capable
 
 ## Usage
 
@@ -104,7 +111,7 @@ Create a JavaScript function that sorts an array with the following requirements
 
 On first run, promptx will guide you through:
 1. Selecting your preferred AI model
-2. Entering the appropriate API key (OpenAI or Anthropic)
+2. Entering the appropriate API key
 
 ## Requirements
 
@@ -113,6 +120,7 @@ On first run, promptx will guide you through:
   - OpenAI: https://platform.openai.com/api-keys
   - Anthropic: https://console.anthropic.com/settings/keys
   - xAI: https://console.x.ai/
+  - Google: https://aistudio.google.com/apikey
 
 ## Troubleshooting
 

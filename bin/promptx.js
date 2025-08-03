@@ -7,6 +7,7 @@ import ora from 'ora';
 import Conf from 'conf';
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import updateNotifier from 'update-notifier';
 import fs from 'fs';
 import path from 'path';
@@ -94,10 +95,15 @@ const MODELS = {
     'grok-3-mini': { name: 'Grok 3 Mini', provider: 'xai' },
     'grok-4': { name: 'Grok 4', provider: 'xai', isThinkingModel: true },
     'grok-4-heavy': { name: 'Grok 4 Heavy', provider: 'xai', isThinkingModel: true }
+  },
+  google: {
+    'gemini-2.5-flash': { name: 'Gemini 2.5 Flash', provider: 'google' },
+    'gemini-2.0-flash': { name: 'Gemini 2.0 Flash', provider: 'google' },
+    'gemini-2.5-pro': { name: 'Gemini 2.5 Pro', provider: 'google' }
   }
 };
 
-const ALL_MODELS = { ...MODELS.openai, ...MODELS.anthropic, ...MODELS.xai };
+const ALL_MODELS = { ...MODELS.openai, ...MODELS.anthropic, ...MODELS.xai, ...MODELS.google };
 
 async function setupWizard() {
   console.log(chalk.blue('\n🚀 Welcome to promptx!'));
@@ -112,7 +118,8 @@ async function setupWizard() {
       choices: [
         { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
         { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
-        { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' }
+        { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' },
+        { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' }
       ]
     }
   ]);
@@ -131,12 +138,18 @@ async function setupWizard() {
       { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-sonnet-4' },
       { name: 'Claude 3.5 Sonnet (Previous generation)', value: 'claude-3-5-sonnet-20241022' }
     ];
-  } else {
+  } else if (provider === 'xai') {
     modelChoices = [
       { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
       { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' },
       { name: 'Grok 4 Heavy (Thinking model, ultimate)', value: 'grok-4-heavy' }
+    ];
+  } else {
+    modelChoices = [
+      { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
+      { name: 'Gemini 2.0 Flash (Previous flash)', value: 'gemini-2.0-flash' },
+      { name: 'Gemini 2.5 Pro (Most capable)', value: 'gemini-2.5-pro' }
     ];
   }
   
@@ -195,7 +208,7 @@ async function setupWizard() {
     ]);
     apiKey = anthropicKey;
     config.set('anthropic_api_key', apiKey);
-  } else {
+  } else if (provider === 'xai') {
     console.log(chalk.yellow('\nYou\'ll need an xAI API key'));
     console.log(chalk.gray('Get one at: https://console.x.ai/\n'));
     
@@ -217,6 +230,25 @@ async function setupWizard() {
     ]);
     apiKey = xaiKey;
     config.set('xai_api_key', apiKey);
+  } else {
+    console.log(chalk.yellow('\nYou\'ll need a Google AI API key'));
+    console.log(chalk.gray('Get one at: https://aistudio.google.com/apikey\n'));
+    
+    const { googleKey } = await inquirer.prompt([
+      {
+        type: 'password',
+        name: 'googleKey',
+        message: 'Enter your Google AI API key:',
+        validate: (input) => {
+          if (!input || input.trim() === '') {
+            return 'API key cannot be empty';
+          }
+          return true;
+        }
+      }
+    ]);
+    apiKey = googleKey;
+    config.set('google_api_key', apiKey);
   }
   
   config.set('selected_model', selectedModel);
@@ -255,12 +287,19 @@ async function getOrSetupConfig() {
       await setupWizard();
       apiKey = config.get('anthropic_api_key');
     }
-  } else {
+  } else if (provider === 'xai') {
     apiKey = config.get('xai_api_key');
     if (!apiKey) {
       console.log(chalk.yellow('xAI API key not found. Running setup...'));
       await setupWizard();
       apiKey = config.get('xai_api_key');
+    }
+  } else {
+    apiKey = config.get('google_api_key');
+    if (!apiKey) {
+      console.log(chalk.yellow('Google AI API key not found. Running setup...'));
+      await setupWizard();
+      apiKey = config.get('google_api_key');
     }
   }
   
@@ -284,7 +323,8 @@ async function changeModel() {
       choices: [
         { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
         { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
-        { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' }
+        { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' },
+        { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' }
       ]
     }
   ]);
@@ -303,12 +343,18 @@ async function changeModel() {
       { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-sonnet-4' },
       { name: 'Claude 3.5 Sonnet (Previous generation)', value: 'claude-3-5-sonnet-20241022' }
     ];
-  } else {
+  } else if (provider === 'xai') {
     modelChoices = [
       { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
       { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' },
       { name: 'Grok 4 Heavy (Thinking model, ultimate)', value: 'grok-4-heavy' }
+    ];
+  } else {
+    modelChoices = [
+      { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
+      { name: 'Gemini 2.0 Flash (Previous flash)', value: 'gemini-2.0-flash' },
+      { name: 'Gemini 2.5 Pro (Most capable)', value: 'gemini-2.5-pro' }
     ];
   }
   
@@ -379,6 +425,22 @@ async function changeModel() {
       }
     ]);
     config.set('xai_api_key', xaiKey);
+  } else if (provider === 'google' && !config.get('google_api_key')) {
+    console.log(chalk.yellow('\nYou need a Google AI API key for this model.'));
+    const { googleKey } = await inquirer.prompt([
+      {
+        type: 'password',
+        name: 'googleKey',
+        message: 'Enter your Google AI API key:',
+        validate: (input) => {
+          if (!input || input.trim() === '') {
+            return 'API key cannot be empty';
+          }
+          return true;
+        }
+      }
+    ]);
+    config.set('google_api_key', googleKey);
   }
   
   config.set('selected_model', selectedModel);
@@ -575,6 +637,32 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
       streamWriter.flush();
       
       console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
+    } else if (modelInfo.provider === 'google') {
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: selectedModel });
+      
+      // Combine system prompt and user prompt for Google AI
+      const fullPrompt = `${systemPrompt}\n\nUser Prompt: ${messyPrompt}`;
+      
+      spinner.stop();
+      console.log('\n\n' + chalk.gray('─'.repeat(80)));
+      console.log(chalk.green('REFINED PROMPT:'));
+      console.log(chalk.gray('─'.repeat(80)) + '\n');
+      
+      const streamWriter = createStreamWriter();
+      const result = await model.generateContentStream(fullPrompt);
+      refinedPrompt = '';
+      
+      for await (const chunk of result.stream) {
+        const text = chunk.text();
+        if (text) {
+          streamWriter.write(text);
+          refinedPrompt += text;
+        }
+      }
+      streamWriter.flush();
+      
+      console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
     }
     
     return refinedPrompt;
@@ -611,6 +699,7 @@ function showHelp() {
   console.log(chalk.white('  • OpenAI    ') + chalk.gray('- GPT-4o, O4 Mini, GPT-4.1'));
   console.log(chalk.white('  • Anthropic ') + chalk.gray('- Claude Sonnet 4, Opus 4'));
   console.log(chalk.white('  • xAI       ') + chalk.gray('- Grok 3, Grok 4'));
+  console.log(chalk.white('  • Google    ') + chalk.gray('- Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro'));
   
   console.log(chalk.green('\n💡 Tips:'));
   console.log(chalk.gray('  • First run will guide you through setup'));
