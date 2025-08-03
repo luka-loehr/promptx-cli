@@ -1,75 +1,88 @@
 # promptx
 
+<div align="center">
+
 [![npm version](https://img.shields.io/npm/v/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 [![npm downloads](https://img.shields.io/npm/dm/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
+**Transform messy developer prompts into meticulously crafted instructions for AI coding assistants**
 
-## 🎉 Version 3.4.3 - Stable Release
+[Installation](#-installation) • [Quick Start](#-quick-start) • [Features](#-features) • [Models](#-supported-models) • [Documentation](#-documentation)
 
-This is the **stable, production-ready** version of promptx! 
+</div>
 
-🚨 **Important:** If you're using an older version, please upgrade immediately:
+---
 
-```bash
-npm install -g @lukaloehr/promptx@latest
+## 🚀 What is promptx?
+
+**promptx** is a CLI tool that transforms your rough, informal developer prompts into highly structured, comprehensive instructions that produce better results from AI coding assistants like Claude, ChatGPT, Cursor, and GitHub Copilot.
+
+### Before promptx:
+```
+"make api endpoint for users with auth"
 ```
 
-**What's included in v3.4.3:**
-- ✅ NEW: Enhanced system prompt with advanced prompt engineering
-- ✅ NEW: Google AI support with Gemini models
-- ✅ Full multi-provider support (OpenAI, Anthropic, xAI, Google)
-- ✅ Gemini 2.5 Flash, 2.0 Flash, and 2.5 Pro models
-- ✅ Replaced O3 with GPT-4.1 (latest model)
-- ✅ Thinking spinner for O4 Mini, Grok 4, and Gemini 2.5 Pro
-- ✅ Conversational handling for casual interactions
-- ✅ All API compatibility issues fixed
-- ✅ Real-time streaming output with proper word wrapping
-- ✅ Respects terminal width boundaries
-- ✅ Streaming enabled for all providers (prevents timeout errors)
-- ✅ Stable, tested codebase
-- ✅ Complete feature set
+### After promptx:
+```
+Create a RESTful API endpoint for user management with JWT authentication in Node.js/Express.
 
-## 🚀 Quick Install (Global CLI Tool)
+Technical Requirements:
+- Implement GET /api/users endpoint to retrieve all users
+- Add pagination support (limit/offset query parameters)
+- Include JWT token validation middleware
+- Return 401 for invalid/missing tokens
+- Filter sensitive fields (password, refresh tokens) from response
 
-This is a **global CLI tool** - install it globally to use the `promptx` command from anywhere:
+Implementation Guidelines:
+- Use Express Router for endpoint organization
+- Implement proper error handling with try-catch blocks
+- Return consistent JSON response format: { success: boolean, data?: any, error?: string }
+- Add request validation using express-validator
+- Include unit tests using Jest/Supertest
+
+Security Considerations:
+- Validate JWT tokens using RS256 algorithm
+- Check token expiration and issuer claims
+- Implement rate limiting (100 requests per minute)
+- Log authentication failures for security monitoring
+```
+
+## 📦 Installation
 
 ```bash
+# Install globally (recommended)
 npm install -g @lukaloehr/promptx
+
+# Or use with npx
+npx @lukaloehr/promptx
 ```
 
-> **Note:** The `-g` flag is required for global installation. Without it, the `promptx` command won't be available in your terminal.
+**Requirements:**
+- Node.js >= 16.0.0
+- An API key from your chosen AI provider
 
-## 🤖 Supported Models
+## 🎯 Quick Start
 
-### OpenAI
-- **GPT-4o** - Most capable general model
-- **O4 Mini** - Thinking model, efficient
-- **GPT-4.1** - Latest version
+### 1. First Run Setup
 
-### Anthropic  
-- **Claude Opus 4** - Most powerful, world's best coding model
-- **Claude Sonnet 4** - Balanced performance, superior reasoning
-- **Claude 3.5 Sonnet** - Previous generation
+```bash
+promptx
+```
 
-### xAI (Grok)
-- **Grok 3** - Advanced reasoning
-- **Grok 3 Mini** - Cost-efficient
-- **Grok 4** - Thinking model, intelligent
+On first run, promptx will guide you through:
+- Selecting your preferred AI provider
+- Choosing a specific model
+- Entering your API key
 
-### Google (Gemini)
-- **Gemini 2.5 Flash** - Fast, efficient
-- **Gemini 2.0 Flash** - Previous flash version
-- **Gemini 2.5 Pro** - Thinking model, most capable
-
-## Usage
+### 2. Basic Usage
 
 ```bash
 # Interactive mode
 promptx
 
 # Direct mode
-promptx "your messy prompt here"
+promptx "create a function to validate email addresses"
 
 # Get help
 promptx /help
@@ -79,53 +92,93 @@ promptx /model
 
 # See what's new
 promptx /whats-new
-
-# Reset configuration
-promptx reset
 ```
 
-## Example
+## ✨ Features
 
-**Input:**
-```
-make a function that sorts array but also handle edge cases like null undefined etc
-```
+### 🤖 Multi-Provider Support
+- **OpenAI**: GPT-4o, O4 Mini, GPT-4.1
+- **Anthropic**: Claude Opus 4, Sonnet 4, 3.5 Sonnet
+- **xAI**: Grok 3, Grok 3 Mini, Grok 4
+- **Google**: Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro
 
-**Output:**
-```
-Create a JavaScript function that sorts an array with the following requirements:
+### 🎨 Advanced Prompt Engineering
+- **Ultra-specific objectives** with clear success criteria
+- **Comprehensive technical requirements** with edge case handling
+- **Implementation guidelines** with architectural preferences
+- **AI-optimized structure** for maximum clarity
+- **Security and performance** considerations included
 
-1. Function should accept an array as input parameter
-2. Handle edge cases including:
-   - null or undefined input
-   - empty arrays
-   - arrays containing null/undefined values
-   - mixed data types (numbers, strings, objects)
-3. Return a new sorted array without modifying the original
-4. Use a stable sorting algorithm
-5. For mixed types, sort by: numbers first (ascending), then strings (alphabetical), then other types
-6. Document the function with JSDoc comments
-7. Include parameter validation and appropriate error handling
-```
+### 💫 Smart Features
+- **Thinking models support**: Special handling for O4 Mini, Grok 4, and Gemini 2.5 Pro
+- **Real-time streaming**: See refined prompts as they're generated
+- **Word wrapping**: Respects terminal boundaries for better readability
+- **Conversational mode**: Chat naturally when not requesting prompts
+- **Auto-updates**: Get notified when new versions are available
 
-## First Run Setup
+## 🤖 Supported Models
 
-On first run, promptx will guide you through:
-1. Selecting your preferred AI model
-2. Entering the appropriate API key
+### OpenAI
+| Model | Description | Type |
+|-------|-------------|------|
+| GPT-4o | Most capable general model | Standard |
+| O4 Mini | Efficient thinking model | Thinking |
+| GPT-4.1 | Latest GPT-4 version | Standard |
 
-## Requirements
+### Anthropic
+| Model | Description | Type |
+|-------|-------------|------|
+| Claude Opus 4 | Most powerful, best for coding | Standard |
+| Claude Sonnet 4 | Balanced performance | Standard |
+| Claude 3.5 Sonnet | Previous generation | Standard |
 
-- Node.js >= 16.0.0
-- API key from your chosen provider:
-  - OpenAI: https://platform.openai.com/api-keys
-  - Anthropic: https://console.anthropic.com/settings/keys
-  - xAI: https://console.x.ai/
-  - Google: https://aistudio.google.com/apikey
+### xAI
+| Model | Description | Type |
+|-------|-------------|------|
+| Grok 3 | Advanced reasoning | Standard |
+| Grok 3 Mini | Cost-efficient | Standard |
+| Grok 4 | Intelligent thinking model | Thinking |
 
-## Troubleshooting
+### Google
+| Model | Description | Type |
+|-------|-------------|------|
+| Gemini 2.5 Flash | Fast and efficient | Standard |
+| Gemini 2.0 Flash | Previous flash version | Standard |
+| Gemini 2.5 Pro | Most capable thinking model | Thinking |
 
-If you get a permissions error during installation:
+*Note: Thinking models show a "Thinking..." spinner during initial processing*
+
+## 📖 Documentation
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `promptx` | Start interactive mode |
+| `promptx "prompt"` | Refine a prompt directly |
+| `promptx /help` | Show help information |
+| `promptx /model` | Switch between AI models |
+| `promptx /whats-new` | See latest updates |
+| `promptx reset` | Reset configuration |
+
+### API Keys
+
+Get your API key from:
+- **OpenAI**: https://platform.openai.com/api-keys
+- **Anthropic**: https://console.anthropic.com/settings/keys
+- **xAI**: https://console.x.ai/
+- **Google**: https://aistudio.google.com/apikey
+
+### Configuration
+
+Configuration is stored securely using the `conf` package:
+- **macOS**: `~/Library/Preferences/promptx-nodejs/`
+- **Windows**: `%APPDATA%/promptx-nodejs/`
+- **Linux**: `~/.config/promptx-nodejs/`
+
+## 🛠️ Troubleshooting
+
+### Permission Errors During Installation
 
 ```bash
 # Option 1: Configure npm to use a different directory
@@ -135,10 +188,48 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 npm install -g @lukaloehr/promptx
 
-# Option 2: Use sudo (not recommended)
-sudo npm install -g @lukaloehr/promptx
+# Option 2: Use npx (no installation needed)
+npx @lukaloehr/promptx
 ```
 
-## License
+### Common Issues
 
-MIT
+**"Invalid API key" error**
+- Run `promptx reset` and re-enter your API key
+- Ensure your API key starts with the correct prefix (sk-, sk-ant-, xai-)
+
+**"Rate limit exceeded" error**
+- Wait a few minutes before trying again
+- Consider upgrading your API plan
+
+**Model not working as expected**
+- Some models have specific requirements (e.g., O4 Mini doesn't support temperature)
+- Thinking models may take longer to start responding
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+Created by [Luka Loehr](https://github.com/luka-loehr)
+
+Special thanks to all contributors and users who have helped improve promptx!
+
+---
+
+<div align="center">
+
+**Ready to write better prompts?**
+
+```bash
+npm install -g @lukaloehr/promptx
+```
+
+[Report Bug](https://github.com/luka-loehr/promptx-cli/issues) • [Request Feature](https://github.com/luka-loehr/promptx-cli/issues)
+
+</div>

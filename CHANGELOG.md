@@ -2,7 +2,23 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.4.3] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.4.4] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Changed
+- 📚 Completely redesigned README with modern structure
+- ✨ Added comprehensive documentation with tables and examples
+- 🎨 Better organization with clear sections and navigation
+- 📖 Added detailed troubleshooting guide
+- 🏗️ Professional presentation with badges and formatting
+
+### Added
+- 📊 Model comparison tables with types (Standard/Thinking)
+- 🔍 Before/after prompt transformation example
+- 💡 Common issues and solutions section
+- 🔗 Direct links to sections for easy navigation
+- 🎯 Clear feature categorization
+
+## [3.4.3] - 2025-08-03 - STABLE RELEASE
 
 ### Changed
 - 🔧 Removed npm version from system prompt for easier maintenance
