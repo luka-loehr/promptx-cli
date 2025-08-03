@@ -1,10 +1,3 @@
-```
- ____  ____   __   _  _  ____  ____  _  _ 
-(  _ \(  _ \ /  \ ( \/ )(  _ \(_  _)( \/ )
- ) __/ )   /(  O )/ \/ \ ) __/  )(   )  ( 
-(__)  (__\_) \__/ \_)(_/(__)   (__) (_/\_)
-```
-
 <div align="center">
 
 # promptx
@@ -19,30 +12,14 @@ Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
 
 </div>
 
-## 🎉 Version 3.4.5 - Stable Release
+## 🎉 Version 3.4.8 - Latest Release
 
-This is the **stable, production-ready** version of promptx! 
-
-🚨 **Important:** If you're using an older version, please upgrade immediately:
-
-```bash
-npm install -g @lukaloehr/promptx@latest
-```
-
-**What's included in v3.4.5:**
-- ✅ NEW: Enhanced system prompt with advanced prompt engineering
-- ✅ NEW: Google AI support with Gemini models
-- ✅ Full multi-provider support (OpenAI, Anthropic, xAI, Google)
-- ✅ Gemini 2.5 Flash, 2.0 Flash, and 2.5 Pro models
-- ✅ Replaced O3 with GPT-4.1 (latest model)
-- ✅ Thinking spinner for O4 Mini, Grok 4, and Gemini 2.5 Pro
-- ✅ Conversational handling for casual interactions
-- ✅ All API compatibility issues fixed
-- ✅ Real-time streaming output with proper word wrapping
-- ✅ Respects terminal width boundaries
-- ✅ Streaming enabled for all providers (prevents timeout errors)
-- ✅ Stable, tested codebase
-- ✅ Complete feature set
+**What's New:**
+- 🤖 **4 AI Providers** - OpenAI, Anthropic, xAI, and Google Gemini
+- 🚀 **15+ Models** - Including GPT-4.1, Claude Opus 4, Grok 4, and Gemini 2.5 Pro
+- 💬 **Smart Conversations** - Knows when to chat vs. refine prompts
+- ⚡ **Real-time Streaming** - See refined prompts as they're generated
+- 🧠 **Thinking Models** - Special handling for O4 Mini, Grok 4, and Gemini Pro
 
 ---
 

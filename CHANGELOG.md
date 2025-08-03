@@ -2,6 +2,20 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [3.4.8] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Changed
+- 🎨 Removed ASCII banner for cleaner look
+- ✨ Simplified "What's New" section to be more concise and appealing
+- 📊 Focused on key features with bold highlights
+- 🚀 More impactful feature presentation
+
+### Technical Details
+- Removed ASCII art logo as requested
+- Condensed the feature list to 5 key highlights
+- Used bold text for emphasis on important features
+- Made the version section shorter and more scannable
+
 ## [3.4.7] - 2025-08-03 - STABLE RELEASE 🎉
 
 ### Added
