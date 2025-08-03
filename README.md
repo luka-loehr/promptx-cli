@@ -5,7 +5,7 @@
 
 Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
 
-## 🎉 Version 3.4.1 - Stable Release
+## 🎉 Version 3.4.2 - Stable Release
 
 This is the **stable, production-ready** version of promptx! 
 
@@ -15,12 +15,14 @@ This is the **stable, production-ready** version of promptx!
 npm install -g @lukaloehr/promptx@latest
 ```
 
-**What's included in v3.4.1:**
+**What's included in v3.4.2:**
+- ✅ NEW: Enhanced system prompt with advanced prompt engineering
 - ✅ NEW: Google AI support with Gemini models
 - ✅ Full multi-provider support (OpenAI, Anthropic, xAI, Google)
 - ✅ Gemini 2.5 Flash, 2.0 Flash, and 2.5 Pro models
 - ✅ Replaced O3 with GPT-4.1 (latest model)
 - ✅ Thinking spinner for O4 Mini, Grok 4, Grok 4 Heavy, and Gemini 2.5 Pro
+- ✅ Conversational handling for casual interactions
 - ✅ All API compatibility issues fixed
 - ✅ Real-time streaming output with proper word wrapping
 - ✅ Respects terminal width boundaries

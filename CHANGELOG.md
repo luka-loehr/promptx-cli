@@ -2,7 +2,26 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.4.1] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.4.2] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Changed
+- 🎯 Completely redesigned system prompt for better prompt engineering
+- 🤖 Added conversational handling for casual interactions
+- 📝 Enhanced prompt engineering principles with 5 comprehensive categories
+- ✨ Added advanced prompt techniques for complex logic
+- 🏷️ System prompt now identifies as promptx with creator attribution
+
+### Technical Details
+- New system prompt includes:
+  - Critical behavior rules for conversational vs prompt requests
+  - Ultra-specific objectives guidelines
+  - Comprehensive technical requirements structure
+  - Implementation guidelines framework
+  - AI-optimized structure principles
+  - Advanced prompt techniques
+- Better handling of edge cases and user intent detection
+
+## [3.4.1] - 2025-08-03 - STABLE RELEASE
 
 ### Changed
 - 🤔 Marked Gemini 2.5 Pro as a thinking model
