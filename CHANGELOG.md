@@ -2,7 +2,18 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.2.3] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.2.4] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Fixed
+- 🐛 Fixed O4 Mini and O3 temperature parameter error
+- ✅ These models now use default temperature value only
+
+### Technical Details
+- O4 Mini and O3 models don't support custom temperature values
+- Temperature parameter is now only set for GPT-4o model
+- Prevents "Unsupported value: 'temperature'" errors
+
+## [3.2.3] - 2025-08-03 - STABLE RELEASE
 
 ### Added
 - 📐 Proper word wrapping for streaming output

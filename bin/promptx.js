@@ -445,15 +445,15 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
           { role: 'system', content: systemPrompt },
           { role: 'user', content: messyPrompt }
         ],
-        temperature: 0.3,
         stream: true
       };
       
-      // Newer models use max_completion_tokens
+      // Newer models use max_completion_tokens and don't support temperature
       if (selectedModel === 'o4-mini' || selectedModel === 'o3') {
         completionParams.max_completion_tokens = 2000;
       } else {
         completionParams.max_tokens = 2000;
+        completionParams.temperature = 0.3;
       }
       
       spinner.stop();
