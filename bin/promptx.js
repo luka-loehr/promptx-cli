@@ -99,7 +99,7 @@ const MODELS = {
   google: {
     'gemini-2.5-flash': { name: 'Gemini 2.5 Flash', provider: 'google' },
     'gemini-2.0-flash': { name: 'Gemini 2.0 Flash', provider: 'google' },
-    'gemini-2.5-pro': { name: 'Gemini 2.5 Pro', provider: 'google' }
+    'gemini-2.5-pro': { name: 'Gemini 2.5 Pro', provider: 'google', isThinkingModel: true }
   }
 };
 
@@ -149,7 +149,7 @@ async function setupWizard() {
     modelChoices = [
       { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
       { name: 'Gemini 2.0 Flash (Previous flash)', value: 'gemini-2.0-flash' },
-      { name: 'Gemini 2.5 Pro (Most capable)', value: 'gemini-2.5-pro' }
+      { name: 'Gemini 2.5 Pro (Thinking model, most capable)', value: 'gemini-2.5-pro' }
     ];
   }
   
@@ -354,7 +354,7 @@ async function changeModel() {
     modelChoices = [
       { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
       { name: 'Gemini 2.0 Flash (Previous flash)', value: 'gemini-2.0-flash' },
-      { name: 'Gemini 2.5 Pro (Most capable)', value: 'gemini-2.5-pro' }
+      { name: 'Gemini 2.5 Pro (Thinking model, most capable)', value: 'gemini-2.5-pro' }
     ];
   }
   
@@ -649,13 +649,26 @@ IMPORTANT: Return ONLY the refined prompt. Do not include any explanations, meta
       console.log(chalk.green('REFINED PROMPT:'));
       console.log(chalk.gray('─'.repeat(80)) + '\n');
       
+      // Show thinking spinner for thinking models
+      let thinkingSpinner;
+      if (modelInfo.isThinkingModel) {
+        thinkingSpinner = ora('Thinking...').start();
+      }
+      
       const streamWriter = createStreamWriter();
       const result = await model.generateContentStream(fullPrompt);
       refinedPrompt = '';
+      let firstChunk = true;
       
       for await (const chunk of result.stream) {
         const text = chunk.text();
         if (text) {
+          // Stop thinking spinner on first chunk
+          if (firstChunk && thinkingSpinner) {
+            thinkingSpinner.stop();
+            firstChunk = false;
+          }
+          
           streamWriter.write(text);
           refinedPrompt += text;
         }

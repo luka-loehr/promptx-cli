@@ -2,7 +2,18 @@
 
 All notable changes to promptx will be documented in this file.
 
-## [3.4.0] - 2025-08-03 - STABLE RELEASE 🎉
+## [3.4.1] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Changed
+- 🤔 Marked Gemini 2.5 Pro as a thinking model
+- ⏳ Added thinking spinner for Gemini 2.5 Pro
+- 📝 Updated model description to indicate thinking capability
+
+### Technical Details
+- Added isThinkingModel flag to Gemini 2.5 Pro configuration
+- Thinking spinner appears for Gemini 2.5 Pro until first streaming chunk
+
+## [3.4.0] - 2025-08-03 - STABLE RELEASE
 
 ### Added
 - 🌟 Google AI support with Gemini models
