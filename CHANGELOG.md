@@ -2,6 +2,29 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [3.4.7] - 2025-08-03 - STABLE RELEASE 🎉
+
+### Added
+- 🎨 ASCII art promptx logo at the top of README
+- 📊 Enhanced formatting with tables for commands and API keys
+- ✨ Visual before/after transformation example
+- 🎯 Better structured sections with emojis
+- 💫 Centered header with badges
+- 🔗 Footer with links to GitHub, issues, and author
+
+### Changed
+- 📐 Improved overall README layout and visual appeal
+- 🛠️ Enhanced troubleshooting section with common issues table
+- 💻 Better formatted usage section with clear subsections
+- 📋 Requirements section now uses a table format
+
+### Technical Details
+- ASCII logo prominently displayed at the top
+- Centered title and badges for professional look
+- Side-by-side transformation example using HTML table
+- Consistent emoji usage throughout for visual hierarchy
+- Added footer with action links
+
 ## [3.4.6] - 2025-08-03 - STABLE RELEASE 🎉
 
 ### Changed

@@ -1,9 +1,23 @@
+```
+ ____  ____   __   _  _  ____  ____  _  _ 
+(  _ \(  _ \ /  \ ( \/ )(  _ \(_  _)( \/ )
+ ) __/ )   /(  O )/ \/ \ ) __/  )(   )  ( 
+(__)  (__\_) \__/ \_)(_/(__)   (__) (_/\_)
+```
+
+<div align="center">
+
 # promptx
 
 [![npm version](https://img.shields.io/npm/v/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
 [![npm downloads](https://img.shields.io/npm/dm/@lukaloehr/promptx.svg)](https://www.npmjs.com/package/@lukaloehr/promptx)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Transform messy prompts into structured, clear prompts for AI agents. Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
+**Transform messy prompts into structured, clear prompts for AI agents**
+
+Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
+
+</div>
 
 ## 🎉 Version 3.4.5 - Stable Release
 
@@ -30,15 +44,15 @@ npm install -g @lukaloehr/promptx@latest
 - ✅ Stable, tested codebase
 - ✅ Complete feature set
 
-## 🚀 Quick Install (Global CLI Tool)
+---
 
-This is a **global CLI tool** - install it globally to use the `promptx` command from anywhere:
+## 🚀 Quick Install
 
 ```bash
 npm install -g @lukaloehr/promptx
 ```
 
-> **Note:** The `-g` flag is required for global installation. Without it, the `promptx` command won't be available in your terminal.
+> ⚠️ **Important:** The `-g` flag is required for global installation. Without it, the `promptx` command won't be available in your terminal.
 
 ## 🤖 Supported Models
 
@@ -62,36 +76,45 @@ npm install -g @lukaloehr/promptx
 - **Gemini 2.0 Flash** - Previous flash version
 - **Gemini 2.5 Pro** - Thinking model, most capable
 
-## Usage
+## 💻 Usage
 
+### Interactive Mode
 ```bash
-# Interactive mode
 promptx
+```
 
-# Direct mode
+### Direct Mode
+```bash
 promptx "your messy prompt here"
-
-# Get help
-promptx /help
-
-# Switch models
-promptx /model
-
-# See what's new
-promptx /whats-new
-
-# Reset configuration
-promptx reset
 ```
 
-## Example
+### Commands
+| Command | Description |
+|---------|-------------|
+| `promptx /help` | Show help information |
+| `promptx /model` | Switch between AI models |
+| `promptx /whats-new` | See latest updates |
+| `promptx reset` | Reset configuration |
 
-**Input:**
+## ✨ Example Transformation
+
+<table>
+<tr>
+<td><strong>🔴 Before (Messy)</strong></td>
+<td><strong>🟢 After (Refined)</strong></td>
+</tr>
+<tr>
+<td>
+
 ```
-make a function that sorts array but also handle edge cases like null undefined etc
+make a function that sorts 
+array but also handle edge 
+cases like null undefined etc
 ```
 
-**Output:**
+</td>
+<td>
+
 ```
 Create a JavaScript function that sorts an array with the following requirements:
 
@@ -103,29 +126,38 @@ Create a JavaScript function that sorts an array with the following requirements
    - mixed data types (numbers, strings, objects)
 3. Return a new sorted array without modifying the original
 4. Use a stable sorting algorithm
-5. For mixed types, sort by: numbers first (ascending), then strings (alphabetical), then other types
+5. For mixed types, sort by: numbers first (ascending), 
+   then strings (alphabetical), then other types
 6. Document the function with JSDoc comments
 7. Include parameter validation and appropriate error handling
 ```
 
-## First Run Setup
+</td>
+</tr>
+</table>
+
+## 🎬 First Run Setup
 
 On first run, promptx will guide you through:
-1. Selecting your preferred AI model
-2. Entering the appropriate API key
+1. 🤖 Selecting your preferred AI provider
+2. 🎯 Choosing a specific model
+3. 🔑 Entering your API key
 
-## Requirements
+## 📋 Requirements
 
-- Node.js >= 16.0.0
-- API key from your chosen provider:
-  - OpenAI: https://platform.openai.com/api-keys
-  - Anthropic: https://console.anthropic.com/settings/keys
-  - xAI: https://console.x.ai/
-  - Google: https://aistudio.google.com/apikey
+- **Node.js** >= 16.0.0
+- **API key** from your chosen provider:
 
-## Troubleshooting
+| Provider | Get API Key |
+|----------|-------------|
+| OpenAI | https://platform.openai.com/api-keys |
+| Anthropic | https://console.anthropic.com/settings/keys |
+| xAI | https://console.x.ai/ |
+| Google | https://aistudio.google.com/apikey |
 
-If you get a permissions error during installation:
+## 🛠️ Troubleshooting
+
+### Permission Errors During Installation
 
 ```bash
 # Option 1: Configure npm to use a different directory
@@ -135,10 +167,28 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 npm install -g @lukaloehr/promptx
 
-# Option 2: Use sudo (not recommended)
-sudo npm install -g @lukaloehr/promptx
+# Option 2: Use npx (no installation needed)
+npx @lukaloehr/promptx
 ```
 
-## License
+### Common Issues
 
-MIT
+| Issue | Solution |
+|-------|----------|
+| `command not found: promptx` | Make sure you installed with `-g` flag |
+| `Invalid API key` | Run `promptx reset` to update your key |
+| `Rate limit exceeded` | Wait a few minutes or upgrade your API plan |
+
+## 📝 License
+
+MIT License - see [LICENSE](LICENSE) file for details
+
+---
+
+<div align="center">
+
+**Made with ❤️ by [Luka Loehr](https://github.com/luka-loehr)**
+
+[⭐ Star on GitHub](https://github.com/luka-loehr/promptx-cli) • [🐛 Report Bug](https://github.com/luka-loehr/promptx-cli/issues) • [💡 Request Feature](https://github.com/luka-loehr/promptx-cli/issues)
+
+</div>
