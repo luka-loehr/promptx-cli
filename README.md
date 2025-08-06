@@ -12,7 +12,7 @@ Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
 
 </div>
 
-## 🎉 Version 3.5.2 - Latest Release
+## 🎉 Version 3.5.3 - Latest Release
 
 **What's New:**
 - 🦙 **Ollama Integration** - Full support for local AI models with comprehensive error handling

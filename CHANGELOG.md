@@ -2,6 +2,26 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [3.5.3] - 2025-08-06 - PERSISTENT QUALITY RECOMMENDATIONS 💡
+
+### Added
+- 🎯 **Always-Visible Quality Guidance** - Model recommendation message appears every time user selects Ollama
+- 💡 **Proactive User Education** - Clear 7B+ parameter recommendation before model selection
+- 🔄 **Consistent Experience** - Same guidance in both setup wizard and `/model` command flows
+- ⚠️ **Quality Warnings** - Persistent reminder about smaller models producing poor results
+
+### Enhanced
+- 📋 **Model Selection UX** - Users now see quality guidance before choosing any Ollama model
+- 🎨 **Strategic Positioning** - Recommendation appears right before model selection prompt
+- 💬 **Clear Messaging** - Specific model recommendations with parameter counts
+- 🚀 **User Success** - Helps users make informed decisions every time
+
+### Technical Details
+- Added quality message in `setupWizard()` after successful Ollama model discovery
+- Added quality message in `changeModel()` after successful Ollama model discovery
+- Message appears before model selection prompt for maximum visibility
+- Maintains clean UI while providing essential quality guidance
+
 ## [3.5.2] - 2025-08-06 - MODEL QUALITY GUIDANCE 📋
 
 ### Improved
