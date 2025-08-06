@@ -264,7 +264,6 @@ async function setupWizard() {
       { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
     ];
   } else if (provider === 'ollama') {
-    console.log(chalk.yellow('\nScanning for local Ollama models...'));
     const ollamaResult = await discoverOllamaModels();
 
     // Handle different error scenarios
@@ -351,8 +350,6 @@ async function setupWizard() {
         name: `${model.name} (${model.fullName})`,
         value: key
       }));
-
-      console.log(chalk.green(`✅ Found ${Object.keys(ollamaResult).length} local model(s)`));
     }
   } else {
     modelChoices = [
@@ -583,7 +580,6 @@ async function changeModel() {
       { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
     ];
   } else if (provider === 'ollama') {
-    console.log(chalk.yellow('\nScanning for local Ollama models...'));
     const ollamaResult = await discoverOllamaModels();
 
     // Handle different error scenarios
@@ -669,8 +665,6 @@ async function changeModel() {
         name: `${model.name} (${model.fullName})`,
         value: key
       }));
-
-      console.log(chalk.green(`✅ Found ${Object.keys(ollamaResult).length} local model(s)`));
     }
   } else {
     modelChoices = [
