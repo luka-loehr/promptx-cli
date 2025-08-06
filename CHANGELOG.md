@@ -2,6 +2,19 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [3.5.1] - 2025-08-06 - UI IMPROVEMENTS 🎨
+
+### Improved
+- 🎨 **Cleaner Ollama UI** - Removed scanning messages for streamlined model selection
+- ✨ **Consistent Experience** - Ollama model selection now matches other providers
+- 🚀 **Faster Workflow** - Direct model selection without extra status messages
+
+### Technical Details
+- Removed "Scanning for local Ollama models..." message
+- Removed "✅ Found X local model(s)" success message
+- Users now see model choices directly in the selection prompt
+- Maintains all error handling and guidance for failure scenarios
+
 ## [3.5.0] - 2025-08-06 - OLLAMA INTEGRATION 🦙
 
 ### Added
