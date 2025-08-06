@@ -2,6 +2,39 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [3.5.0] - 2025-08-06 - OLLAMA INTEGRATION 🦙
+
+### Added
+- 🦙 **Ollama Provider Support** - Full integration with local Ollama models
+- 🔍 **Automatic Model Discovery** - Scans and displays locally downloaded Ollama models
+- 🛡️ **Comprehensive Error Handling** - Graceful fallbacks for all Ollama failure scenarios
+- 📋 **Smart Error Detection** - Specific guidance for installation, service, and model issues
+- 🔄 **Graceful Degradation** - Seamless fallback to cloud providers when Ollama fails
+- 💡 **User Guidance System** - Actionable instructions for each error scenario
+
+### Enhanced
+- 🚀 **Setup Wizard** - Now includes Ollama as a provider option with error handling
+- 🔧 **Model Selection** - Dynamic discovery and selection of local Ollama models
+- 🌐 **API Integration** - OpenAI-compatible API support for Ollama models
+- ⚡ **Streaming Support** - Real-time streaming for Ollama model responses
+- 🎯 **Error Messages** - Specific, helpful error messages with exact commands to fix issues
+
+### Technical Details
+- Added `discoverOllamaModels()` function with comprehensive error detection
+- Implemented `checkOllamaService()` for service status verification
+- Enhanced setupWizard and changeModel functions with Ollama error handling
+- Added specific error guidance functions for each failure scenario
+- Integrated Ollama into existing provider selection and configuration system
+- Maintained consistency with existing error handling patterns
+
+### Error Scenarios Covered
+- **Ollama Not Installed** → Installation instructions with links to https://ollama.ai
+- **Service Not Running** → Commands to start Ollama service (`ollama serve`)
+- **No Models Downloaded** → Popular model suggestions (`ollama pull llama3`, etc.)
+- **API Connection Failures** → Troubleshooting steps and port checking
+- **Model Execution Errors** → Memory optimization and model guidance
+- **Unknown Errors** → Generic troubleshooting with fallback options
+
 ## [3.4.8] - 2025-08-03 - STABLE RELEASE 🎉
 
 ### Changed

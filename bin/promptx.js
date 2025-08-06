@@ -13,10 +13,14 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import wrapAnsi from 'wrap-ansi';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+
+const execAsync = promisify(exec);
 
 // Helper function for streaming with word wrap
 function createStreamWriter() {
@@ -61,6 +65,115 @@ function createStreamWriter() {
   };
 }
 
+// User guidance functions for Ollama errors
+function showOllamaNotInstalledError() {
+  console.log(chalk.red('\n❌ Ollama is not installed on your system.'));
+  console.log(chalk.gray('\nOllama is required to use local AI models.'));
+  console.log(chalk.yellow('\n📥 To install Ollama:'));
+  console.log(chalk.white('  • Visit: ') + chalk.blue('https://ollama.ai'));
+  console.log(chalk.white('  • Or use: ') + chalk.cyan('curl -fsSL https://ollama.ai/install.sh | sh'));
+  console.log(chalk.gray('\n💡 After installation, download models with:'));
+  console.log(chalk.cyan('  ollama pull llama3'));
+  console.log(chalk.cyan('  ollama pull mistral'));
+  console.log(chalk.cyan('  ollama pull codellama'));
+}
+
+function showOllamaServiceNotRunningError() {
+  console.log(chalk.red('\n❌ Ollama service is not running.'));
+  console.log(chalk.gray('\nOllama is installed but the service needs to be started.'));
+  console.log(chalk.yellow('\n🚀 To start Ollama:'));
+  console.log(chalk.cyan('  ollama serve'));
+  console.log(chalk.gray('\n💡 Or run Ollama in the background and try again.'));
+}
+
+function showOllamaNoModelsError() {
+  console.log(chalk.red('\n❌ No Ollama models found locally.'));
+  console.log(chalk.gray('\nYou need to download at least one model to use Ollama.'));
+  console.log(chalk.yellow('\n📦 Popular models to try:'));
+  console.log(chalk.cyan('  ollama pull llama3        ') + chalk.gray('# Meta\'s Llama 3 (7B)'));
+  console.log(chalk.cyan('  ollama pull mistral       ') + chalk.gray('# Mistral 7B'));
+  console.log(chalk.cyan('  ollama pull codellama     ') + chalk.gray('# Code Llama for programming'));
+  console.log(chalk.cyan('  ollama pull phi3          ') + chalk.gray('# Microsoft Phi-3 (small & fast)'));
+  console.log(chalk.gray('\n💡 After downloading, restart promptx to see your models.'));
+}
+
+function showOllamaConnectionError() {
+  console.log(chalk.red('\n❌ Cannot connect to Ollama API.'));
+  console.log(chalk.gray('\nThe Ollama service may not be running or accessible.'));
+  console.log(chalk.yellow('\n🔧 Troubleshooting steps:'));
+  console.log(chalk.white('  1. ') + chalk.cyan('ollama serve') + chalk.gray(' - Start the Ollama service'));
+  console.log(chalk.white('  2. ') + chalk.cyan('ollama list') + chalk.gray(' - Verify models are available'));
+  console.log(chalk.white('  3. Check if port 11434 is available'));
+  console.log(chalk.gray('\n💡 Ollama runs on http://localhost:11434 by default.'));
+}
+
+// Function to check if Ollama service is running
+async function checkOllamaService() {
+  try {
+    const response = await fetch('http://localhost:11434/api/tags', {
+      method: 'GET',
+      signal: AbortSignal.timeout(3000) // 3 second timeout
+    });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
+// Enhanced function to discover Ollama models with comprehensive error handling
+async function discoverOllamaModels() {
+  try {
+    const { stdout, stderr } = await execAsync('ollama list');
+    const lines = stdout.trim().split('\n');
+
+    // Check if we only have headers (no models)
+    if (lines.length <= 1) {
+      return { error: 'no_models' };
+    }
+
+    // Skip header line and parse model information
+    const models = {};
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (line) {
+        // Parse the line: NAME    ID    SIZE    MODIFIED
+        const parts = line.split(/\s+/);
+        if (parts.length >= 1) {
+          const modelName = parts[0];
+          // Extract base model name (remove tags like :latest)
+          const baseName = modelName.split(':')[0];
+          models[modelName] = {
+            name: baseName.charAt(0).toUpperCase() + baseName.slice(1),
+            provider: 'ollama',
+            fullName: modelName
+          };
+        }
+      }
+    }
+
+    // If no models were parsed, return no_models error
+    if (Object.keys(models).length === 0) {
+      return { error: 'no_models' };
+    }
+
+    return models;
+  } catch (error) {
+    // Check specific error types
+    if (error.message.includes('command not found') || error.code === 'ENOENT') {
+      return { error: 'not_installed' };
+    }
+
+    // Check if it's a service not running error by testing the API
+    const serviceRunning = await checkOllamaService();
+    if (!serviceRunning) {
+      return { error: 'service_not_running' };
+    }
+
+    // Generic error
+    return { error: 'unknown', details: error.message };
+  }
+}
+
 // Check for updates
 const notifier = updateNotifier({ 
   pkg: packageJson,
@@ -99,10 +212,16 @@ const MODELS = {
     'gemini-2.5-flash': { name: 'Gemini 2.5 Flash', provider: 'google' },
     'gemini-2.0-flash': { name: 'Gemini 2.0 Flash', provider: 'google' },
     'gemini-2.5-pro': { name: 'Gemini 2.5 Pro', provider: 'google', isThinkingModel: true }
-  }
+  },
+  ollama: {}
 };
 
-const ALL_MODELS = { ...MODELS.openai, ...MODELS.anthropic, ...MODELS.xai, ...MODELS.google };
+// Function to get all models including dynamically discovered Ollama models
+function getAllModels() {
+  return { ...MODELS.openai, ...MODELS.anthropic, ...MODELS.xai, ...MODELS.google, ...MODELS.ollama };
+}
+
+const ALL_MODELS = getAllModels();
 
 async function setupWizard() {
   console.log(chalk.blue('\n🚀 Welcome to promptx!'));
@@ -118,7 +237,8 @@ async function setupWizard() {
         { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
         { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
         { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' },
-        { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' }
+        { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' },
+        { name: '🦙 Ollama (Local models)', value: 'ollama' }
       ]
     }
   ]);
@@ -143,6 +263,97 @@ async function setupWizard() {
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
       { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
     ];
+  } else if (provider === 'ollama') {
+    console.log(chalk.yellow('\nScanning for local Ollama models...'));
+    const ollamaResult = await discoverOllamaModels();
+
+    // Handle different error scenarios
+    if (ollamaResult.error) {
+      switch (ollamaResult.error) {
+        case 'not_installed':
+          showOllamaNotInstalledError();
+          break;
+        case 'service_not_running':
+          showOllamaServiceNotRunningError();
+          break;
+        case 'no_models':
+          showOllamaNoModelsError();
+          break;
+        default:
+          console.log(chalk.red('\n❌ Error accessing Ollama:'), ollamaResult.details || 'Unknown error');
+          console.log(chalk.gray('Please check your Ollama installation and try again.'));
+      }
+
+      console.log(chalk.yellow('\n🔄 Would you like to choose a different provider instead?'));
+      const { useOtherProvider } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'useOtherProvider',
+          message: 'Select a different AI provider?',
+          default: true
+        }
+      ]);
+
+      if (useOtherProvider) {
+        // Restart provider selection without Ollama
+        const { newProvider } = await inquirer.prompt([
+          {
+            type: 'list',
+            name: 'newProvider',
+            message: 'Which AI provider would you like to use?',
+            choices: [
+              { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
+              { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
+              { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' },
+              { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' }
+            ]
+          }
+        ]);
+
+        // Recursively call setupWizard with the new provider
+        provider = newProvider;
+
+        // Set model choices based on new provider
+        if (provider === 'openai') {
+          modelChoices = [
+            { name: 'GPT-4o (Most capable)', value: 'gpt-4o' },
+            { name: 'O4 Mini (Thinking model, efficient)', value: 'o4-mini' },
+            { name: 'GPT-4.1 (Latest version)', value: 'gpt-4.1' }
+          ];
+        } else if (provider === 'anthropic') {
+          modelChoices = [
+            { name: 'Claude Opus 4 (Most powerful, best coding)', value: 'claude-opus-4' },
+            { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-sonnet-4' },
+            { name: 'Claude 3.5 Sonnet (Previous generation)', value: 'claude-3-5-sonnet-20241022' }
+          ];
+        } else if (provider === 'xai') {
+          modelChoices = [
+            { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
+            { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
+            { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
+          ];
+        } else {
+          modelChoices = [
+            { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
+            { name: 'Gemini 2.0 Flash (Previous flash)', value: 'gemini-2.0-flash' },
+            { name: 'Gemini 2.5 Pro (Thinking model, most capable)', value: 'gemini-2.5-pro' }
+          ];
+        }
+      } else {
+        console.log(chalk.gray('\nExiting setup. You can run promptx again when Ollama is ready.'));
+        process.exit(0);
+      }
+    } else {
+      // Success - update MODELS.ollama with discovered models
+      MODELS.ollama = ollamaResult;
+
+      modelChoices = Object.entries(ollamaResult).map(([key, model]) => ({
+        name: `${model.name} (${model.fullName})`,
+        value: key
+      }));
+
+      console.log(chalk.green(`✅ Found ${Object.keys(ollamaResult).length} local model(s)`));
+    }
   } else {
     modelChoices = [
       { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
@@ -162,7 +373,10 @@ async function setupWizard() {
   
   // API key setup based on provider
   let apiKey;
-  if (provider === 'openai') {
+  if (provider === 'ollama') {
+    // Ollama doesn't need an API key
+    apiKey = null;
+  } else if (provider === 'openai') {
     console.log(chalk.yellow('\nYou\'ll need an OpenAI API key'));
     console.log(chalk.gray('Get one at: https://platform.openai.com/api-keys\n'));
     
@@ -252,7 +466,7 @@ async function setupWizard() {
   config.set('selected_model', selectedModel);
   config.set('setup_complete', true);
   
-  const modelInfo = ALL_MODELS[selectedModel];
+  const modelInfo = getAllModels()[selectedModel];
   console.log(chalk.green('\n✅ Setup complete!'));
   console.log(chalk.gray(`Provider: ${provider.toUpperCase()}`));
   console.log(chalk.gray(`Model: ${modelInfo.name}`));
@@ -267,11 +481,31 @@ async function getOrSetupConfig() {
   }
   
   const selectedModel = config.get('selected_model') || 'gpt-4o';
-  const modelInfo = ALL_MODELS[selectedModel];
+  let modelInfo = getAllModels()[selectedModel];
+
+  // If model not found and it might be an Ollama model, try to discover Ollama models
+  if (!modelInfo && selectedModel) {
+    const ollamaResult = await discoverOllamaModels();
+    if (!ollamaResult.error) {
+      MODELS.ollama = ollamaResult;
+      modelInfo = getAllModels()[selectedModel];
+    }
+  }
+
+  // If still not found, fall back to default
+  if (!modelInfo) {
+    console.log(chalk.yellow(`Model ${selectedModel} not found. Falling back to GPT-4o.`));
+    config.set('selected_model', 'gpt-4o');
+    modelInfo = getAllModels()['gpt-4o'];
+  }
+
   const provider = modelInfo.provider;
   
   let apiKey;
-  if (provider === 'openai') {
+  if (provider === 'ollama') {
+    // Ollama doesn't need an API key
+    apiKey = null;
+  } else if (provider === 'openai') {
     apiKey = config.get('openai_api_key');
     if (!apiKey) {
       console.log(chalk.yellow('OpenAI API key not found. Running setup...'));
@@ -308,7 +542,7 @@ async function changeModel() {
   console.log(chalk.blue('\n🔄 Change Model'));
   
   const currentModel = config.get('selected_model') || 'gpt-4o';
-  const currentModelInfo = ALL_MODELS[currentModel];
+  const currentModelInfo = getAllModels()[currentModel] || getAllModels()['gpt-4o'];
   
   console.log(chalk.gray(`Current model: ${currentModelInfo.name}\n`));
   
@@ -322,7 +556,8 @@ async function changeModel() {
         { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
         { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
         { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' },
-        { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' }
+        { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' },
+        { name: '🦙 Ollama (Local models)', value: 'ollama' }
       ]
     }
   ]);
@@ -347,6 +582,96 @@ async function changeModel() {
       { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
       { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
     ];
+  } else if (provider === 'ollama') {
+    console.log(chalk.yellow('\nScanning for local Ollama models...'));
+    const ollamaResult = await discoverOllamaModels();
+
+    // Handle different error scenarios
+    if (ollamaResult.error) {
+      switch (ollamaResult.error) {
+        case 'not_installed':
+          showOllamaNotInstalledError();
+          break;
+        case 'service_not_running':
+          showOllamaServiceNotRunningError();
+          break;
+        case 'no_models':
+          showOllamaNoModelsError();
+          break;
+        default:
+          console.log(chalk.red('\n❌ Error accessing Ollama:'), ollamaResult.details || 'Unknown error');
+          console.log(chalk.gray('Please check your Ollama installation and try again.'));
+      }
+
+      console.log(chalk.yellow('\n🔄 Would you like to choose a different provider instead?'));
+      const { useOtherProvider } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'useOtherProvider',
+          message: 'Select a different AI provider?',
+          default: true
+        }
+      ]);
+
+      if (useOtherProvider) {
+        // Restart provider selection without Ollama
+        const { newProvider } = await inquirer.prompt([
+          {
+            type: 'list',
+            name: 'newProvider',
+            message: 'Which AI provider would you like to use?',
+            choices: [
+              { name: '🤖 OpenAI (GPT-4o, O4 Mini, GPT-4.1)', value: 'openai' },
+              { name: '🧠 Anthropic (Claude Sonnet 4, Claude Opus 4)', value: 'anthropic' },
+              { name: '🚀 xAI (Grok 3, Grok 4)', value: 'xai' },
+              { name: '🌟 Google (Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro)', value: 'google' }
+            ]
+          }
+        ]);
+
+        // Update provider and set model choices
+        provider = newProvider;
+
+        if (provider === 'openai') {
+          modelChoices = [
+            { name: 'GPT-4o (Most capable)', value: 'gpt-4o' },
+            { name: 'O4 Mini (Thinking model, efficient)', value: 'o4-mini' },
+            { name: 'GPT-4.1 (Latest version)', value: 'gpt-4.1' }
+          ];
+        } else if (provider === 'anthropic') {
+          modelChoices = [
+            { name: 'Claude Opus 4 (Most powerful, best coding)', value: 'claude-opus-4' },
+            { name: 'Claude Sonnet 4 (Balanced performance)', value: 'claude-sonnet-4' },
+            { name: 'Claude 3.5 Sonnet (Previous generation)', value: 'claude-3-5-sonnet-20241022' }
+          ];
+        } else if (provider === 'xai') {
+          modelChoices = [
+            { name: 'Grok 3 (Advanced reasoning)', value: 'grok-3' },
+            { name: 'Grok 3 Mini (Cost-efficient)', value: 'grok-3-mini' },
+            { name: 'Grok 4 (Thinking model, intelligent)', value: 'grok-4' }
+          ];
+        } else {
+          modelChoices = [
+            { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
+            { name: 'Gemini 2.0 Flash (Previous flash)', value: 'gemini-2.0-flash' },
+            { name: 'Gemini 2.5 Pro (Thinking model, most capable)', value: 'gemini-2.5-pro' }
+          ];
+        }
+      } else {
+        console.log(chalk.gray('\nReturning to current model. You can try again when Ollama is ready.'));
+        return;
+      }
+    } else {
+      // Success - update MODELS.ollama with discovered models
+      MODELS.ollama = ollamaResult;
+
+      modelChoices = Object.entries(ollamaResult).map(([key, model]) => ({
+        name: `${model.name} (${model.fullName})`,
+        value: key
+      }));
+
+      console.log(chalk.green(`✅ Found ${Object.keys(ollamaResult).length} local model(s)`));
+    }
   } else {
     modelChoices = [
       { name: 'Gemini 2.5 Flash (Fast, efficient)', value: 'gemini-2.5-flash' },
@@ -365,7 +690,9 @@ async function changeModel() {
   ]);
   
   // Check if we need API key for this provider
-  if (provider === 'openai' && !config.get('openai_api_key')) {
+  if (provider === 'ollama') {
+    // Ollama doesn't need an API key
+  } else if (provider === 'openai' && !config.get('openai_api_key')) {
     console.log(chalk.yellow('\nYou need an OpenAI API key for this model.'));
     const { openaiKey } = await inquirer.prompt([
       {
@@ -441,12 +768,12 @@ async function changeModel() {
   }
   
   config.set('selected_model', selectedModel);
-  const modelInfo = ALL_MODELS[selectedModel];
+  const modelInfo = getAllModels()[selectedModel];
   console.log(chalk.green(`\n✅ Switched to ${modelInfo.name}`));
 }
 
 async function refinePrompt(messyPrompt, selectedModel, apiKey) {
-  const modelInfo = ALL_MODELS[selectedModel];
+  const modelInfo = getAllModels()[selectedModel];
   const spinner = ora(`Refining your prompt with ${modelInfo.name}...`).start();
   
   const systemPrompt = `You are promptx, an expert prompt engineering tool created by Luka Loehr (https://github.com/luka-loehr). You are part of the @lukaloehr/promptx npm package - a CLI tool that transforms messy, informal developer prompts into meticulously crafted instructions for AI coding assistants.
@@ -688,22 +1015,113 @@ Transform even the messiest developer thoughts into prompts that produce product
         }
       }
       streamWriter.flush();
-      
+
       console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
+    } else if (modelInfo.provider === 'ollama') {
+      // Ollama uses OpenAI-compatible API
+      try {
+        const ollama = new OpenAI({
+          apiKey: 'ollama', // Ollama doesn't validate API keys
+          baseURL: 'http://localhost:11434/v1'
+        });
+
+        const completionParams = {
+          model: selectedModel,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: messyPrompt }
+          ],
+          stream: true,
+          temperature: 0.3,
+          max_tokens: 2000
+        };
+
+        spinner.stop();
+        console.log('\n\n' + chalk.gray('─'.repeat(80)));
+        console.log(chalk.green('REFINED PROMPT:'));
+        console.log(chalk.gray('─'.repeat(80)) + '\n');
+
+        const streamWriter = createStreamWriter();
+        const stream = await ollama.chat.completions.create(completionParams);
+        refinedPrompt = '';
+
+        for await (const chunk of stream) {
+          if (chunk.choices[0]?.delta?.content) {
+            const content = chunk.choices[0].delta.content;
+            streamWriter.write(content);
+            refinedPrompt += content;
+          }
+        }
+        streamWriter.flush();
+
+        console.log('\n' + chalk.gray('─'.repeat(80)) + '\n\n');
+      } catch (ollamaError) {
+        spinner.fail('Failed to refine prompt with Ollama');
+
+        // Handle specific Ollama errors
+        if (ollamaError.code === 'ECONNREFUSED' || ollamaError.message.includes('ECONNREFUSED')) {
+          showOllamaConnectionError();
+        } else if (ollamaError.status === 404 || ollamaError.message.includes('model not found')) {
+          console.log(chalk.red('\n❌ Model not found in Ollama.'));
+          console.log(chalk.gray(`The model "${selectedModel}" is not available locally.`));
+          console.log(chalk.yellow('\n📦 To download this model:'));
+          console.log(chalk.cyan(`  ollama pull ${selectedModel}`));
+          console.log(chalk.gray('\n💡 Or choose a different model with: ') + chalk.cyan('/model'));
+        } else if (ollamaError.message.includes('insufficient memory') || ollamaError.message.includes('out of memory')) {
+          console.log(chalk.red('\n❌ Insufficient memory to run the model.'));
+          console.log(chalk.gray('The selected model requires more RAM than available.'));
+          console.log(chalk.yellow('\n💡 Try:'));
+          console.log(chalk.white('  • Close other applications to free memory'));
+          console.log(chalk.white('  • Use a smaller model (e.g., phi3, llama3:8b)'));
+          console.log(chalk.white('  • Switch to a cloud provider with ') + chalk.cyan('/model'));
+        } else {
+          console.log(chalk.red('\n❌ Ollama API error:'), ollamaError.message);
+          console.log(chalk.gray('\nThis might be a temporary issue. Please try:'));
+          console.log(chalk.yellow('\n🔧 Troubleshooting:'));
+          console.log(chalk.white('  1. ') + chalk.cyan('ollama serve') + chalk.gray(' - Restart Ollama service'));
+          console.log(chalk.white('  2. ') + chalk.cyan('ollama list') + chalk.gray(' - Check available models'));
+          console.log(chalk.white('  3. Try a different model with ') + chalk.cyan('/model'));
+        }
+
+        console.log(chalk.yellow('\n🔄 You can switch to a cloud provider for now:'));
+        console.log(chalk.cyan('  /model') + chalk.gray(' - Choose OpenAI, Anthropic, xAI, or Google'));
+
+        throw ollamaError; // Re-throw to trigger main error handler
+      }
     }
-    
+
     return refinedPrompt;
   } catch (error) {
-    spinner.fail('Failed to refine prompt');
-    
+    // Only show generic error handling if spinner is still running
+    // (Ollama errors handle their own spinner.fail())
+    if (spinner.isSpinning) {
+      spinner.fail('Failed to refine prompt');
+    }
+
+    // Handle different error types
     if (error.status === 401) {
       console.log(chalk.red('Invalid API key. Please run "promptx reset" to update your API key.'));
     } else if (error.status === 429) {
       console.log(chalk.red('Rate limit exceeded. Please try again later.'));
+    } else if (modelInfo.provider === 'ollama') {
+      // Ollama errors are already handled above, just show fallback suggestion
+      console.log(chalk.gray('\n💡 Consider using a cloud provider as a backup:'));
+      console.log(chalk.cyan('  /model') + chalk.gray(' - Switch to OpenAI, Anthropic, xAI, or Google'));
     } else {
       console.log(chalk.red('Error:', error.message));
+
+      // Provide helpful suggestions based on provider
+      if (modelInfo.provider === 'openai') {
+        console.log(chalk.gray('\n💡 Check your OpenAI API key and account status.'));
+      } else if (modelInfo.provider === 'anthropic') {
+        console.log(chalk.gray('\n💡 Check your Anthropic API key and account status.'));
+      } else if (modelInfo.provider === 'xai') {
+        console.log(chalk.gray('\n💡 Check your xAI API key and account status.'));
+      } else if (modelInfo.provider === 'google') {
+        console.log(chalk.gray('\n💡 Check your Google AI API key and account status.'));
+      }
     }
-    
+
     process.exit(1);
   }
 }
@@ -727,6 +1145,7 @@ function showHelp() {
   console.log(chalk.white('  • Anthropic ') + chalk.gray('- Claude Sonnet 4, Opus 4'));
   console.log(chalk.white('  • xAI       ') + chalk.gray('- Grok 3, Grok 4'));
   console.log(chalk.white('  • Google    ') + chalk.gray('- Gemini 2.5 Flash, 2.0 Flash, 2.5 Pro'));
+  console.log(chalk.white('  • Ollama    ') + chalk.gray('- Local models (llama3, mistral, etc.)'));
   
   console.log(chalk.green('\n💡 Tips:'));
   console.log(chalk.gray('  • First run will guide you through setup'));

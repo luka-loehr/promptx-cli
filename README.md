@@ -12,14 +12,16 @@ Supports the latest AI models from OpenAI, Anthropic, xAI, and Google!
 
 </div>
 
-## 🎉 Version 3.4.8 - Latest Release
+## 🎉 Version 3.5.0 - Latest Release
 
 **What's New:**
-- 🤖 **4 AI Providers** - OpenAI, Anthropic, xAI, and Google Gemini
-- 🚀 **15+ Models** - Including GPT-4.1, Claude Opus 4, Grok 4, and Gemini 2.5 Pro
+- 🦙 **Ollama Integration** - Full support for local AI models with comprehensive error handling
+- 🤖 **5 AI Providers** - OpenAI, Anthropic, xAI, Google Gemini, and Ollama
+- 🚀 **15+ Models** - Including GPT-4.1, Claude Opus 4, Grok 4, Gemini 2.5 Pro, and local models
 - 💬 **Smart Conversations** - Knows when to chat vs. refine prompts
 - ⚡ **Real-time Streaming** - See refined prompts as they're generated
 - 🧠 **Thinking Models** - Special handling for O4 Mini, Grok 4, and Gemini Pro
+- 🛡️ **Robust Error Handling** - Graceful fallbacks and helpful guidance for all scenarios
 
 ---
 
@@ -52,6 +54,12 @@ npm install -g @lukaloehr/promptx
 - **Gemini 2.5 Flash** - Fast, efficient
 - **Gemini 2.0 Flash** - Previous flash version
 - **Gemini 2.5 Pro** - Thinking model, most capable
+
+### Ollama (Local Models)
+- **Dynamic Model Discovery** - Automatically detects your locally downloaded models
+- **Popular Models Supported** - Llama 3, Mistral, Code Llama, Phi-3, DeepSeek, and more
+- **No API Keys Required** - Run completely offline with your local models
+- **Comprehensive Error Handling** - Helpful guidance for installation and setup
 
 ## 💻 Usage
 
@@ -123,14 +131,15 @@ On first run, promptx will guide you through:
 ## 📋 Requirements
 
 - **Node.js** >= 16.0.0
-- **API key** from your chosen provider:
+- **API key** from your chosen provider (or Ollama for local models):
 
-| Provider | Get API Key |
-|----------|-------------|
-| OpenAI | https://platform.openai.com/api-keys |
-| Anthropic | https://console.anthropic.com/settings/keys |
-| xAI | https://console.x.ai/ |
-| Google | https://aistudio.google.com/apikey |
+| Provider | Get API Key | Notes |
+|----------|-------------|-------|
+| OpenAI | https://platform.openai.com/api-keys | Cloud-based |
+| Anthropic | https://console.anthropic.com/settings/keys | Cloud-based |
+| xAI | https://console.x.ai/ | Cloud-based |
+| Google | https://aistudio.google.com/apikey | Cloud-based |
+| Ollama | No API key required | Local models - Install from https://ollama.ai |
 
 ## 🛠️ Troubleshooting
 
