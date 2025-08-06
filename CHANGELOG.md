@@ -2,6 +2,26 @@
 
 All notable changes to promptx will be documented in this file.
 
+## [3.5.2] - 2025-08-06 - MODEL QUALITY GUIDANCE 📋
+
+### Improved
+- 🎯 **Model Size Guidance** - Added important warnings about small models (<7B) producing poor results
+- 📊 **Quality Recommendations** - Emphasized 7B+ models (llama3, mistral, codellama) for best prompt refinement
+- 💡 **User Education** - Clear parameter counts and quality expectations across all error scenarios
+- 🔍 **Consistent Messaging** - Updated all Ollama error messages with model size recommendations
+
+### Technical Details
+- Updated `showOllamaNoModelsError()` with 7B+ model recommendations
+- Enhanced model not found errors with quality alternatives
+- Improved memory error guidance with size vs quality trade-offs
+- Added README note about 7B+ parameter requirement for optimal results
+
+### User Benefits
+- Prevents downloading poor-performing small models
+- Sets proper expectations for model quality vs size
+- Provides specific, actionable model recommendations
+- Helps users make informed decisions about local model selection
+
 ## [3.5.1] - 2025-08-06 - UI IMPROVEMENTS 🎨
 
 ### Improved
