@@ -89,11 +89,12 @@ function showOllamaServiceNotRunningError() {
 function showOllamaNoModelsError() {
   console.log(chalk.red('\n❌ No Ollama models found locally.'));
   console.log(chalk.gray('\nYou need to download at least one model to use Ollama.'));
-  console.log(chalk.yellow('\n📦 Popular models to try:'));
-  console.log(chalk.cyan('  ollama pull llama3        ') + chalk.gray('# Meta\'s Llama 3 (7B)'));
-  console.log(chalk.cyan('  ollama pull mistral       ') + chalk.gray('# Mistral 7B'));
-  console.log(chalk.cyan('  ollama pull codellama     ') + chalk.gray('# Code Llama for programming'));
-  console.log(chalk.cyan('  ollama pull phi3          ') + chalk.gray('# Microsoft Phi-3 (small & fast)'));
+  console.log(chalk.yellow('\n📦 Recommended models for prompt refinement:'));
+  console.log(chalk.cyan('  ollama pull llama3        ') + chalk.gray('# Meta\'s Llama 3 (8B) - Excellent quality'));
+  console.log(chalk.cyan('  ollama pull mistral       ') + chalk.gray('# Mistral 7B - Good performance'));
+  console.log(chalk.cyan('  ollama pull codellama     ') + chalk.gray('# Code Llama (7B+) - For programming'));
+  console.log(chalk.yellow('\n⚠️  Note: ') + chalk.gray('Models smaller than 7-8B parameters may produce poor results for prompt refinement.'));
+  console.log(chalk.gray('    For best quality, use 7B+ models like llama3, mistral, or codellama.'));
   console.log(chalk.gray('\n💡 After downloading, restart promptx to see your models.'));
 }
 
@@ -1060,13 +1061,17 @@ Transform even the messiest developer thoughts into prompts that produce product
           console.log(chalk.gray(`The model "${selectedModel}" is not available locally.`));
           console.log(chalk.yellow('\n📦 To download this model:'));
           console.log(chalk.cyan(`  ollama pull ${selectedModel}`));
+          console.log(chalk.yellow('\n💡 For best prompt refinement quality, use 7B+ models:'));
+          console.log(chalk.cyan('  ollama pull llama3        ') + chalk.gray('# 8B parameters, excellent quality'));
+          console.log(chalk.cyan('  ollama pull mistral       ') + chalk.gray('# 7B parameters, good performance'));
           console.log(chalk.gray('\n💡 Or choose a different model with: ') + chalk.cyan('/model'));
         } else if (ollamaError.message.includes('insufficient memory') || ollamaError.message.includes('out of memory')) {
           console.log(chalk.red('\n❌ Insufficient memory to run the model.'));
           console.log(chalk.gray('The selected model requires more RAM than available.'));
           console.log(chalk.yellow('\n💡 Try:'));
           console.log(chalk.white('  • Close other applications to free memory'));
-          console.log(chalk.white('  • Use a smaller model (e.g., phi3, llama3:8b)'));
+          console.log(chalk.white('  • Use llama3:8b or mistral:7b (good quality, lower memory)'));
+          console.log(chalk.yellow('  ⚠️  Avoid models smaller than 7B - they produce poor results'));
           console.log(chalk.white('  • Switch to a cloud provider with ') + chalk.cyan('/model'));
         } else {
           console.log(chalk.red('\n❌ Ollama API error:'), ollamaError.message);

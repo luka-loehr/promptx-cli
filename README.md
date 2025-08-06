@@ -57,9 +57,11 @@ npm install -g @lukaloehr/promptx
 
 ### Ollama (Local Models)
 - **Dynamic Model Discovery** - Automatically detects your locally downloaded models
-- **Popular Models Supported** - Llama 3, Mistral, Code Llama, Phi-3, DeepSeek, and more
+- **Recommended Models** - Llama 3 (8B), Mistral (7B), Code Llama (7B+) for best quality
 - **No API Keys Required** - Run completely offline with your local models
 - **Comprehensive Error Handling** - Helpful guidance for installation and setup
+
+> ⚠️ **Note**: For optimal prompt refinement quality, use models with 7B+ parameters. Smaller models may produce poor results.
 
 ## 💻 Usage
 
