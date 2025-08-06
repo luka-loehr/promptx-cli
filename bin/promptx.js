@@ -347,6 +347,11 @@ async function setupWizard() {
       // Success - update MODELS.ollama with discovered models
       MODELS.ollama = ollamaResult;
 
+      // Show recommendation message before model selection
+      console.log(chalk.yellow('\n💡 For best prompt refinement quality, use models with 7B+ parameters.'));
+      console.log(chalk.gray('   Recommended: llama3 (8B), mistral (7B), codellama (7B+)'));
+      console.log(chalk.gray('   Smaller models may produce poor results.\n'));
+
       modelChoices = Object.entries(ollamaResult).map(([key, model]) => ({
         name: `${model.name} (${model.fullName})`,
         value: key
@@ -661,6 +666,11 @@ async function changeModel() {
     } else {
       // Success - update MODELS.ollama with discovered models
       MODELS.ollama = ollamaResult;
+
+      // Show recommendation message before model selection
+      console.log(chalk.yellow('\n💡 For best prompt refinement quality, use models with 7B+ parameters.'));
+      console.log(chalk.gray('   Recommended: llama3 (8B), mistral (7B), codellama (7B+)'));
+      console.log(chalk.gray('   Smaller models may produce poor results.\n'));
 
       modelChoices = Object.entries(ollamaResult).map(([key, model]) => ({
         name: `${model.name} (${model.fullName})`,
